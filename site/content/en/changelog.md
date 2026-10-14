@@ -37,6 +37,7 @@ Polish of the base product, and fixes from using it on real projects.
 - The SQL editor selection was hidden behind the active line.
 - The cell editor has a single accent border, both language flags have the same size, and the row panel footer stays at the bottom.
 - The `host_not_allowed` connection failure has its own message.
+- A relative `GRESBASE_DATA_DIR` no longer shows the warning about data that isn't kept.
 
 ### Security {#v0-3-0-security}
 

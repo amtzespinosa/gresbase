@@ -27,6 +27,10 @@ func DataLoss(dir string) string {
 	if err != nil {
 		return "" // not Linux, or no /proc: nothing to tell
 	}
+	// Mount points are absolute: a relative GRESBASE_DATA_DIR would match none of them.
+	if abs, err := filepath.Abs(dir); err == nil {
+		dir = abs
+	}
 	return dataLoss(string(info), dir, InContainer())
 }
 

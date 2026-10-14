@@ -37,6 +37,7 @@ Pulido del producto base y arreglos de usarlo en proyectos reales.
 - La línea activa tapaba la selección del editor SQL.
 - El editor de celda tiene un solo borde de acento, las dos banderas de idioma miden lo mismo y el pie del panel de fila queda abajo.
 - El fallo de conexión `host_not_allowed` tiene su propio mensaje.
+- Un `GRESBASE_DATA_DIR` relativo ya no muestra el aviso de datos que no se conservan.
 
 ### Seguridad {#v0-3-0-security}
 

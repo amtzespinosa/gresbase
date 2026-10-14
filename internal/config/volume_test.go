@@ -1,6 +1,9 @@
 package config
 
-import "testing"
+import (
+	"os"
+	"testing"
+)
 
 // Lines from `docker run … grep " /data " /proc/self/mountinfo`, plus the container root.
 const (
@@ -33,5 +36,16 @@ func TestDataLoss(t *testing.T) {
 	}
 	if got := unescape(`/home/me/gresbase\040data`); got != "/home/me/gresbase data" {
 		t.Errorf("unescape = %q", got)
+	}
+}
+
+// A relative data dir is resolved before it is matched against the (absolute) mount points.
+func TestDataLossRelativeDir(t *testing.T) {
+	wd, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, want := DataLoss("."), DataLoss(wd); got != want {
+		t.Errorf("DataLoss(.) = %q, DataLoss(%q) = %q", got, wd, want)
 	}
 }

@@ -46,6 +46,7 @@ Polish of the base product, and fixes from using it on real projects.
 - Single accent border on the cell editor; flags with the same size; the row panel footer stays at the
   bottom.
 - Own message for the `host_not_allowed` connection failure.
+- A relative `GRESBASE_DATA_DIR` no longer shows the "data is not persistent" warning.
 
 ### Security
 
