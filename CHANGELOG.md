@@ -2,6 +2,26 @@
 
 v0.3.0 is the first public version; v0.1.0 and v0.2.0 were never published.
 
+## v0.4.0 (2026-10-14)
+
+Search all tables at once.
+
+### Added
+
+- Global search: a term in every table the role can read (text with `ILIKE`, exact numbers, uuids and
+  dates), and in the names of tables, views and columns. Results stream table by table with progress
+  and can be canceled; a row opens its table filtered to it, with the matching column highlighted.
+  Schemas can be limited and stay in the URL; large tables are opt-in; a table that is too slow can be
+  retried with more time. It works read-only, in free mode and behind Nginx or Cloudflare.
+
+### Changed
+
+- The Studio edition moves to v0.5 in the roadmap.
+- The cell editor is the cell itself: grown over its neighbours, on a light background with a rounded
+  2 px accent border, and no field box inside.
+- Signing out asks first, and says when unsaved grid changes would be lost or an open SQL transaction
+  rolled back.
+
 ## v0.3.0 (2026-10-14)
 
 Polish of the base product, and fixes from using it on real projects.

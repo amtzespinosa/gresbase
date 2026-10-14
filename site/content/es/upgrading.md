@@ -21,7 +21,7 @@ Cada versión publica la imagen con estas etiquetas (`.goreleaser.yaml`). Para l
 | `0.3` | La 0.3.x más reciente: solo correcciones. |
 | `latest` | La versión más reciente de todas, incluida una futura 0.4 o 1.0. |
 
-Antes de la 1.0, una versión menor nueva (0.4) puede cambiar cosas, así que en producción fija la versión menor en la línea `image:`: `{{imageName}}:0.3`. A partir de la 1.0, cada versión tendrá además una etiqueta mayor (`1`): la 1.x más reciente, nunca una versión mayor nueva. El inicio rápido usa `latest`.
+Antes de la 1.0, una versión menor nueva (0.5) puede cambiar cosas, así que en producción fija la versión menor en la línea `image:`: `{{imageName}}:0.4`. A partir de la 1.0, cada versión tendrá además una etiqueta mayor (`1`): la 1.x más reciente, nunca una versión mayor nueva. El inicio rápido usa `latest`.
 
 ### Descarga y recrea {#recreate}
 

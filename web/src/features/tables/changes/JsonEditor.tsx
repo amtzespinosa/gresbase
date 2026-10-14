@@ -2,7 +2,7 @@ import { json } from '@codemirror/lang-json'
 import { EditorView, minimalSetup } from 'codemirror'
 import { type KeyboardEvent, useEffect, useRef, useState } from 'react'
 import { cn } from '@/lib/cn'
-import { fieldClass } from './ValueInput'
+import { bareFieldClass, fieldClass } from './ValueInput'
 
 interface JsonEditorProps {
   value: string
@@ -13,10 +13,19 @@ interface JsonEditorProps {
   id?: string
   'aria-label': string
   'aria-invalid'?: boolean
+  /** Inside the grid's cell editor: no box of its own. */
+  bare?: boolean
 }
 
 /** A small CodeMirror editor for json/jsonb and arrays. */
-export function JsonEditor({ value, onChange, autoFocus, onKeyDown, ...aria }: JsonEditorProps) {
+export function JsonEditor({
+  value,
+  onChange,
+  autoFocus,
+  onKeyDown,
+  bare,
+  ...aria
+}: JsonEditorProps) {
   const host = useRef<HTMLDivElement>(null)
   const change = useRef(onChange)
   useEffect(() => {
@@ -52,7 +61,7 @@ export function JsonEditor({ value, onChange, autoFocus, onKeyDown, ...aria }: J
       id={aria.id}
       onKeyDown={onKeyDown}
       className={cn(
-        fieldClass,
+        bare ? bareFieldClass : fieldClass,
         'max-h-64 min-h-24 overflow-auto px-0 [&_.cm-editor]:bg-transparent [&_.cm-focused]:outline-none',
         aria['aria-invalid'] && 'border-danger',
       )}

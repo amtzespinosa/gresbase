@@ -6,6 +6,7 @@ import {
   Moon,
   PanelLeftClose,
   PanelLeftOpen,
+  ScanSearch,
   Search,
   Settings,
   Sun,
@@ -17,7 +18,7 @@ import { AppIcon } from '@/components/Logo'
 import { IconButton } from '@/components/ui/IconButton'
 import { Kbd } from '@/components/ui/Kbd'
 import { Tooltip } from '@/components/ui/Tooltip'
-import { useSignOut } from '@/features/auth/useSignOut'
+import { useSignOutDialog } from '@/features/auth/useSignOut'
 import { usePalette } from '@/features/palette/store'
 import { labelColor, useConnectionEntry, useConnectionId } from '@/lib/api/connections'
 import { useConfig } from '@/lib/api/queries'
@@ -45,7 +46,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const { t } = useTranslation()
   const { theme, setTheme } = usePrefs()
   const authEnabled = useConfig().data?.auth_enabled
-  const signOut = useSignOut()
+  const askSignOut = useSignOutDialog((s) => s.setOpen)
   const openPalette = usePalette((s) => s.setOpen)
   const side = collapsed ? 'right' : 'top'
   const connectionId = useConnectionId()
@@ -54,6 +55,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
   const nav = [
     { to: '/c/$connectionId/tables', label: t('nav.tables'), icon: <Table2 /> },
     { to: '/c/$connectionId/sql', label: t('nav.sql'), icon: <Code2 /> },
+    { to: '/c/$connectionId/search', label: t('nav.globalSearch'), icon: <ScanSearch /> },
   ] as const
 
   return (
@@ -146,7 +148,7 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
               label={t('auth.signOut')}
               icon={<LogOut />}
               tooltipSide={side}
-              onClick={signOut}
+              onClick={() => askSignOut(true)}
             />
           )}
           <IconButton

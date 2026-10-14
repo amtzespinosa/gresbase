@@ -121,6 +121,7 @@ type Completions struct {
 type CompletionTable struct {
 	Schema  string   `json:"schema"`
 	Name    string   `json:"name"`
+	Kind    string   `json:"kind"` // as Relation.Kind: table, view, materialized_view…
 	Columns []string `json:"columns"`
 	// Partition is true for partitions: the palette lists only their parent.
 	Partition bool `json:"partition"`

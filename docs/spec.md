@@ -5,9 +5,9 @@ Gresbase es el estudio para cualquier Postgres: una imagen Docker, cero variable
 Este documento lista todo lo que tendrá la app y en qué fase.
 
 > Leyenda: **[v0.1]** MVP · **[v0.1.1]** mejoras tras el MVP · **[v0.2]** compatibilidad, acceso y
-> configuración · **[v0.3]** pulido del producto base · **[v0.4]** edición Studio · **[v0.5]**
-> administración · **[v0.6]** equipos · **[después]** producto. La versión actual cubre hasta lo marcado
-> como [v0.3].
+> configuración · **[v0.3]** pulido del producto base · **[v0.4]** búsqueda global · **[v0.5]** edición Studio · **[v0.6]**
+> administración · **[v0.7]** equipos · **[después]** producto. La versión actual cubre hasta lo marcado
+> como [v0.4].
 
 ## Principios
 
@@ -21,7 +21,7 @@ Este documento lista todo lo que tendrá la app y en qué fase.
 - Solo Postgres (versiones en la tabla de abajo). Sin telemetría de producto.
 - Inglés y español desde el principio.
 - **Modo básico / avanzado:** el básico muestra Tablas y Editor SQL. El avanzado añade Esquema, Métricas,
-  Roles, Extensiones… El selector aparece en v0.4 (edición Studio); antes no se muestra.
+  Roles, Extensiones… El selector aparece en v0.5 (edición Studio); antes no se muestra.
 
 ## Roadmap
 
@@ -30,9 +30,10 @@ Este documento lista todo lo que tendrá la app y en qué fase.
 | v0.1 | MVP + endurecimiento: despliegue, shell con temas e idiomas, login, tablas y editor de datos, escritura segura completa, estructura en lectura, editor SQL con historial, guardadas y modo transacción, CSV a tabla existente y exportación; selects propios y fijado de columnas y filas (v0.1.1) | Hecho |
 | v0.2 | Compatibilidad, acceso y configuración: Postgres 12–19, capacidades por versión, capa de configuración, cuentas locales, gestor de conexiones, asistente de primer arranque, modo libre tipo Adminer, conexiones guardadas, Ajustes | Hecho |
 | v0.3 | Pulido del producto base: rendimiento, edición de estructura, personalizar columnas, pegar desde hoja de cálculo, pestañas y favoritas, pestañas y parámetros SQL | Hecho (primera versión pública) |
-| v0.4 | Edición Studio: modo avanzado, esquema visual, métricas, EXPLAIN visual; imágenes `gresbase` y `gresbase-studio` desde el mismo código | Siguiente |
-| v0.5 | Administración: roles, extensiones, vistas, funciones, triggers, RLS, enums, backups | Futuro |
-| v0.6 | Equipos: multiusuario con roles, invitaciones, permisos por conexión, SSO/OIDC, auditoría | Futuro |
+| v0.4 | Búsqueda global: valores en todas las tablas y nombres de tablas, vistas y columnas, con filtro por esquema, por partes y en solo lectura (página «Buscar en todas las tablas» de la documentación) | Hecho |
+| v0.5 | Edición Studio: modo avanzado, esquema visual, métricas, EXPLAIN visual; imágenes `gresbase` y `gresbase-studio` desde el mismo código | Siguiente |
+| v0.6 | Administración: roles, extensiones, vistas, funciones, triggers, RLS, enums, backups | Futuro |
+| v0.7 | Equipos: multiusuario con roles, invitaciones, permisos por conexión, SSO/OIDC, auditoría | Futuro |
 | v1.0 | Estabilidad: formatos de datos y API estables, etiqueta mayor de la imagen | Futuro |
 | Ideas | Otros motores (MySQL, MariaDB, SQLite), soporte de `pgvector`, BaaS open source | Sin fecha |
 
@@ -142,7 +143,7 @@ gresbase:
 - **[v0.1]** Notificaciones discretas abajo, con acción de deshacer cuando aplica.
 - **[v0.1]** Estados vacíos y errores claros, con el error de Postgres completo desplegable.
 - **[v0.1]** Usable en tablet; en móvil, consulta y lectura.
-- **[v0.4]** Selector de modo básico/avanzado.
+- **[v0.5]** Selector de modo básico/avanzado.
 
 ## Tablas
 
@@ -197,7 +198,7 @@ gresbase:
 - **[v0.1]** Consultas guardadas como `.sql` en `/data/snippets`, con carpetas.
 - **[v0.1]** `statement_timeout` visible; límite de filas devueltas (1.000 por defecto) con aviso.
 - **[v0.3]** Varias pestañas de consulta y parámetros `:variable` enviados como parámetros enlazados.
-- **[v0.4]** EXPLAIN visual.
+- **[v0.5]** EXPLAIN visual.
 
 ## Escritura segura [v0.1]
 
@@ -228,27 +229,27 @@ deshacer cuando no es fiable (cascadas, triggers, etc.), y se dice antes de guar
 - **[v0.1]** Cookie firmada `HttpOnly`, `SameSite=Strict`, caducidad configurable, cerrar sesión.
 - **[v0.1]** Límite de intentos de login; cabeceras de seguridad; cabecera anti-CSRF.
 - **[v0.1]** Detrás de proxy: `X-Forwarded-*` y ruta base.
-- **[v0.6]** Varios usuarios con roles, invitaciones, permisos por conexión; SSO/OIDC; auditoría.
+- **[v0.7]** Varios usuarios con roles, invitaciones, permisos por conexión; SSO/OIDC; auditoría.
 
 ## Import y export
 
 - **[v0.1]** Exportar tabla o vista filtrada a CSV o JSON, en streaming.
 - **[v0.1]** Importar CSV a tabla existente: vista previa, mapeo de columnas, separador y cabecera,
   validación, transacción, informe de errores por fila.
-- **[v0.5]** Importar a tabla nueva, exportar DDL de esquema/base, backups con `pg_dump`.
+- **[v0.6]** Importar a tabla nueva, exportar DDL de esquema/base, backups con `pg_dump`.
 
-## Esquema visual [v0.4]
+## Esquema visual [v0.5]
 
 Diagrama ER con tarjetas por tabla, líneas entre columnas relacionadas, auto-organizar, resaltar
 relaciones, filtrar, zoom y minimapa, exportar SVG/PNG/Mermaid.
 
-## Métricas [v0.4]
+## Métricas [v0.5]
 
 Dashboards tipo Supabase con muestreo cada pocos segundos (24 h en memoria, opcional en `/data`):
 visión general (tamaño, conexiones, TPS, cache hit), tablas, consultas (`pg_stat_statements`), actividad
 y bloqueos (cancelar/terminar), índices, replicación.
 
-## Administración [v0.5]
+## Administración [v0.6]
 
 Roles y permisos, extensiones, vistas y materializadas, funciones, triggers, RLS, enums, esquemas,
 `pg_settings`. (Las varias conexiones llegan antes, en v0.2.)

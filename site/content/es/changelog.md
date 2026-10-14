@@ -6,6 +6,20 @@ description: Qué cambió en cada versión de Gresbase, de la más reciente a la
 La v0.3.0 es la primera versión pública; la v0.1.0 y la v0.2.0 nunca se publicaron.
 :::
 
+## v0.4.0 (2026-10-14) {#v0-4-0}
+
+Buscar en todas las tablas a la vez.
+
+### Novedades {#v0-4-0-added}
+
+- [Búsqueda global](./global-search.md): un término en todas las tablas que el rol puede leer, y en los nombres de tablas, vistas y columnas. Los resultados llegan tabla a tabla y se pueden cancelar. Una fila abre su tabla filtrada a ella, con la columna que coincide resaltada. Funciona en solo lectura, en modo libre y detrás de un proxy.
+
+### Cambios {#v0-4-0-changed}
+
+- La edición Studio pasa a la v0.5 en la hoja de ruta.
+- El editor de celda es la propia celda: más grande que las vecinas, con fondo claro, un borde de acento de 2 px con las esquinas redondeadas y sin un campo dentro.
+- Cerrar sesión pregunta antes, y avisa si se perderían cambios sin guardar del grid o se revertiría una transacción SQL abierta.
+
 ## v0.3.0 (2026-10-14) {#v0-3-0}
 
 Pulido del producto base y arreglos de usarlo en proyectos reales.

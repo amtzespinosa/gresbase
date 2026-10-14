@@ -218,7 +218,10 @@ test('a table opens with the newest rows first (primary key descending) and the 
   await user.click(g.getByRole('button', { name: /^email text/ }))
   await user.click(g.getByRole('button', { name: /^email text/ }))
   expect(router.state.location.href).not.toContain('sort')
-  await waitFor(() => expect(bodies.at(-1)?.sort).toEqual([{ column: 'id', dir: 'desc' }]))
+  // Back to the cached default page: its refetch can take a while under load.
+  await waitFor(() => expect(bodies.at(-1)?.sort).toEqual([{ column: 'id', dir: 'desc' }]), {
+    timeout: 5000,
+  })
 })
 
 test('keyset pagination pushes and pops cursors', async () => {

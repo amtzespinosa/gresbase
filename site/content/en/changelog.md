@@ -6,6 +6,20 @@ description: What changed in each version of Gresbase, newest first.
 v0.3.0 is the first public version; v0.1.0 and v0.2.0 were never published.
 :::
 
+## v0.4.0 (2026-10-14) {#v0-4-0}
+
+Search all tables at once.
+
+### Added {#v0-4-0-added}
+
+- [Global search](./global-search.md): a term in every table the role can read, and in the names of tables, views and columns. Results arrive table by table and can be canceled. A row opens its table filtered to it, with the matching column highlighted. It works read-only, in free mode and behind a proxy.
+
+### Changed {#v0-4-0-changed}
+
+- The Studio edition moves to v0.5 in the roadmap.
+- The cell editor is the cell itself: grown over its neighbours, on a light background with a rounded 2 px accent border, and no field box inside.
+- Signing out asks first, and says when unsaved grid changes would be lost or an open SQL transaction rolled back.
+
 ## v0.3.0 (2026-10-14) {#v0-3-0}
 
 Polish of the base product, and fixes from using it on real projects.

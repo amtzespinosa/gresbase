@@ -74,6 +74,24 @@ slow=$(curl -sS -w ' HTTP %{http_code}' -X POST -H 'X-Gresbase: 1' -H 'Content-T
   fail "slow query behind Nginx"
 [[ $slow == *'"slept"'*' HTTP 200' ]] || fail "slow query behind Nginx: $slow"
 
+echo "==> global search streams through Nginx: the first event long before a table locked for 3 s"
+psql() { $devdb exec -T postgres psql -v ON_ERROR_STOP=1 -qAt -U gresbase -d app "$@"; }
+psql -c "DROP TABLE IF EXISTS smoke_locked; CREATE TABLE smoke_locked (id int PRIMARY KEY, v text);
+  INSERT INTO smoke_locked VALUES (1, 'locktest')"
+psql -c "BEGIN; LOCK TABLE smoke_locked; SELECT pg_sleep(3); COMMIT" >/dev/null &
+locker=$!
+sleep 0.5
+found=$(curl -sS -N -w '\nFIRST %{time_starttransfer} TOTAL %{time_total}' -X POST -H 'X-Gresbase: 1' \
+  -H 'Content-Type: application/json' -d '{"q":"locktest","schemas":["public"],"timeout_ms":10000}' \
+  "http://$host:$nport/api/v1/search") || fail "search behind Nginx"
+wait $locker
+psql -c "DROP TABLE smoke_locked"
+timing=$(tail -1 <<<"$found")
+[[ $found == *'"type":"start"'* && $found == *'"snippet":"locktest"'* && $found == *'"type":"done"'* ]] ||
+  fail "search behind Nginx: $found"
+awk '{ exit !($2 < 1.5 && $4 >= 2.4) }' <<<"$timing" || fail "search did not stream ($timing)"
+echo "    $timing"
+
 echo "==> setup mode: token link and setup-token"
 docker run -d --name "$name-setup" "$image" >/dev/null
 for _ in $(seq 30); do

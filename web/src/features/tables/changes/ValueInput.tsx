@@ -18,6 +18,10 @@ export const fieldClass =
   'w-full rounded-[var(--radius-control)] border border-border bg-surface-2 px-2 font-mono text-[12.5px] text-text ' +
   'placeholder:text-muted focus-visible:outline-2 focus-visible:outline-accent aria-[invalid=true]:border-danger'
 
+/** The field inside the grid's cell editor: no box of its own, the editor around it is the cell. */
+export const bareFieldClass =
+  'w-full flex-1 border-0 bg-transparent px-[14px] font-mono text-[12.5px] text-text outline-none placeholder:text-muted'
+
 // CodeMirror loads with the first json/array editor, outside the initial bundle.
 const JsonEditor = lazy(() => import('./JsonEditor').then((m) => ({ default: m.JsonEditor })))
 
@@ -34,6 +38,8 @@ interface ValueInputProps {
   multiline?: boolean
   onKeyDown?: (e: KeyboardEvent) => void
   id?: string
+  /** Inside the grid's cell editor: no border, background or radius of its own. */
+  bare?: boolean
 }
 
 /** The input for one value, by editor kind. Shared by the in-grid editor and the row panel. */
@@ -49,7 +55,9 @@ export function ValueInput({
   multiline,
   onKeyDown,
   id,
+  bare,
 }: ValueInputProps) {
+  const field = bare ? bareFieldClass : fieldClass
   const common = {
     id,
     'aria-label': label,
@@ -62,7 +70,11 @@ export function ValueInput({
     return (
       <Select
         {...common}
-        className="h-8 bg-surface-2 px-2 font-mono text-[12.5px]"
+        className={
+          bare
+            ? 'h-auto! flex-1 rounded-none! border-0! bg-transparent! px-[14px]! font-mono text-[12.5px]'
+            : 'h-8 bg-surface-2 px-2 font-mono text-[12.5px]'
+        }
         value={value}
         onValueChange={onChange}
         placeholder={placeholder}
@@ -72,8 +84,14 @@ export function ValueInput({
   }
   if (kind === 'json' || kind === 'array') {
     return (
-      <Suspense fallback={<div className={cn(fieldClass, 'min-h-24')} />}>
-        <JsonEditor {...common} value={value} onChange={onChange} placeholder={placeholder} />
+      <Suspense fallback={<div className={cn(field, 'min-h-24')} />}>
+        <JsonEditor
+          {...common}
+          bare={bare}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+        />
       </Suspense>
     )
   }
@@ -81,7 +99,7 @@ export function ValueInput({
     return (
       <textarea
         {...common}
-        className={cn(fieldClass, 'min-h-24 py-1.5')}
+        className={cn(field, 'min-h-24 py-1.5')}
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
@@ -94,7 +112,7 @@ export function ValueInput({
       // A native date picker is enough; timestamps keep their time zone, so they stay text.
       type={kind === 'date' ? 'date' : 'text'}
       inputMode={kind === 'integer' ? 'numeric' : kind === 'number' ? 'decimal' : undefined}
-      className={cn(fieldClass, 'h-8')}
+      className={cn(field, bare ? 'min-h-0' : 'h-8')}
       value={value}
       placeholder={placeholder ?? (kind === 'datetime' ? 'YYYY-MM-DD HH:MM:SS+00' : undefined)}
       onChange={(e) => onChange(e.target.value)}
@@ -165,9 +183,9 @@ export function CellEditor({ column, kind, initial, onCommit, onCancel }: CellEd
     <div
       data-testid="cell-editor"
       onBlur={onBlur}
-      // The accent border is the focus mark: a focus outline on the field inside would draw a second
-      // yellow line along it.
-      className="flex flex-col gap-1 rounded-[var(--radius-control)] border border-accent bg-surface p-1 shadow-card [&_:focus-visible]:outline-none"
+      // The editor is the cell itself, grown over its neighbours: the accent border is the focus mark,
+      // with rounded corners, right on the light background, with no field box inside.
+      className="flex flex-1 flex-col overflow-hidden rounded-[6px] border-2 border-accent [&_:focus-visible]:outline-none"
     >
       <ValueInput
         kind={kind}
@@ -181,8 +199,9 @@ export function CellEditor({ column, kind, initial, onCommit, onCancel }: CellEd
         invalid={error !== null}
         autoFocus
         onKeyDown={onKeyDown}
+        bare
       />
-      {hint && <div className="px-1 font-sans text-[11px]">{hint}</div>}
+      {hint && <div className="px-[14px] pb-1 font-sans text-[11px]">{hint}</div>}
     </div>
   )
 }

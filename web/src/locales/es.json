@@ -8,7 +8,8 @@
     "sql": "Editor SQL",
     "settings": "Ajustes",
     "collapse": "Plegar barra lateral",
-    "expand": "Desplegar barra lateral"
+    "expand": "Desplegar barra lateral",
+    "globalSearch": "Buscar en todas las tablas"
   },
   "theme": {
     "label": "Tema",
@@ -291,7 +292,14 @@
     "invalid": "Usuario o contraseña incorrectos."
   },
   "auth": {
-    "signOut": "Cerrar sesión"
+    "signOut": "Cerrar sesión",
+    "signOutConfirm": {
+      "title": "¿Cerrar sesión?",
+      "description": "Volverás a la pantalla de inicio de sesión y esta sesión terminará.",
+      "pending_one": "Se perderá {{count}} cambio sin guardar en el grid.",
+      "pending_other": "Se perderán {{count}} cambios sin guardar en el grid.",
+      "transaction": "La transacción SQL abierta se revertirá."
+    }
   },
   "common": {
     "close": "Cerrar",
@@ -676,7 +684,8 @@
     "shortcuts": "Atajos de teclado",
     "connections": "Conexiones",
     "switchTo": "Cambiar a {{name}}",
-    "favorites": "Favoritas"
+    "favorites": "Favoritas",
+    "searchAll": "Buscar «{{term}}» en todas las tablas"
   },
   "help": {
     "title": "Atajos de teclado"
@@ -987,5 +996,46 @@
     "anonymous_volume": "El directorio de datos es un volumen anónimo: las consultas guardadas y los ajustes se pierden al borrar el contenedor.",
     "container_layer": "El directorio de datos está dentro del contenedor: las consultas guardadas y los ajustes se pierden al borrar el contenedor.",
     "fix": "Monta un volumen con nombre en /data (GRESBASE_DATA_DIR) para conservarlos."
+  },
+  "search": {
+    "title": "Buscar en todas las tablas",
+    "label": "Término que buscar",
+    "placeholder": "Busca un valor o un nombre en todas las tablas…",
+    "submit": "Buscar",
+    "includeLarge": "Incluir tablas grandes",
+    "schemas": "Esquemas",
+    "allSchemas": "Todos los esquemas",
+    "someSchemas_one": "{{count}} esquema",
+    "someSchemas_other": "{{count}} esquemas",
+    "emptyTitle": "Busca en todas las tablas a la vez",
+    "emptyHint": "Escribe al menos dos caracteres. También se buscan los nombres de tablas, vistas y columnas.",
+    "structure": "Estructura",
+    "data": "Datos",
+    "noRows": "Ninguna fila contiene este término.",
+    "rows_one": "{{count}} fila",
+    "rows_other": "{{count}} filas",
+    "progress": "{{done}} de {{total}} tablas",
+    "summary_one": "{{count}} fila en {{tables}}",
+    "summary_other": "{{count}} filas en {{tables}}",
+    "canceled": "Cancelada.",
+    "cancel": "Cancelar",
+    "truncated": "Parada en 500 filas: afina el término o los esquemas.",
+    "skippedLarge_one": "Se ha dejado fuera {{count}} tabla grande.",
+    "skippedLarge_other": "Se han dejado fuera {{count}} tablas grandes.",
+    "skipped_one": "No se ha podido buscar en {{count}} tabla",
+    "skipped_other": "No se ha podido buscar en {{count}} tablas",
+    "reason": {
+      "permission": "Sin permiso",
+      "timeout": "Demasiado lenta",
+      "error": "Error"
+    },
+    "retry": "Reintentar con más tiempo",
+    "kind": {
+      "table": "Tabla",
+      "view": "Vista",
+      "column": "Columna"
+    },
+    "tableCount_one": "{{count}} tabla",
+    "tableCount_other": "{{count}} tablas"
   }
 }

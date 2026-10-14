@@ -355,6 +355,7 @@ function DataTab({ meta, search, update }: DataTabProps) {
             key={`${meta.schema}.${meta.name}.${resets}`}
             label={t('grid.label', { table: meta.name })}
             columns={columns}
+            focusColumn={search.col}
             rows={editing.rows}
             sort={sort}
             onSort={(column, multi) => {

@@ -134,6 +134,8 @@ export interface DataGridProps {
   rowSelected?: (row: number) => boolean
   /** Click on a row: Ctrl/Cmd toggles it, Shift selects the range from the last clicked row. */
   onRowClick?: (row: number, mode: RowClick) => void
+  /** A column to bring into view and highlight (a structure result of the global search). */
+  focusColumn?: string
 }
 
 export interface RowClick {
@@ -186,6 +188,7 @@ export function DataGrid({
   table: target,
   rowSelected,
   onRowClick,
+  focusColumn,
 }: DataGridProps) {
   const { t } = useTranslation()
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -296,6 +299,7 @@ export function DataGrid({
   const fixedWidth = gutterWidth + table.getLeftTotalSize()
   /** Column indexes in visual order, for arrow keys. */
   const visualOrder = [...left, ...center].map((h) => Number(h.column.id))
+  const focusIndex = focusColumn ? columns.findIndex((c) => c.name === focusColumn) : -1
 
   const rowV = useVirtualizer({
     count: rows.length - pinned,
@@ -409,6 +413,16 @@ export function DataGrid({
     if (ci >= 0) colV.scrollToIndex(ci)
     wantFocus.current = true
   }
+
+  // Once the columns are known, the focused column becomes the active one and scrolls into view.
+  const focused = useRef<string | undefined>(undefined)
+  useEffect(() => {
+    if (focusIndex < 0 || focused.current === focusColumn) return
+    focused.current = focusColumn
+    setActive({ row: 0, col: focusIndex })
+    const ci = center.findIndex((h) => Number(h.column.id) === focusIndex)
+    if (ci >= 0) colV.scrollToIndex(ci, { align: 'center' })
+  })
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (!(e.target as HTMLElement).dataset.cell) return // keys inside editors or gutter controls
@@ -530,9 +544,11 @@ export function DataGrid({
           />
         </div>
         {editor && (
+          // Grown 4 px over the neighbouring cells, like a spreadsheet, always on the light surface
+          // (also over a gray selected row) and with the editor's rounded corners.
           <div
-            className="absolute -top-0.5 left-0 z-20"
-            style={{ width: Math.max(h.getSize(), 260) }}
+            className="absolute -top-1 -left-1 z-20 flex flex-col rounded-[6px] bg-surface shadow-card"
+            style={{ width: Math.max(h.getSize() + 8, 220), minHeight: rowHeight + 8 }}
           >
             {editor}
           </div>
@@ -656,6 +672,7 @@ export function DataGrid({
                 key={h.id}
                 header={h}
                 column={c}
+                highlight={Number(h.column.id) === focusIndex}
                 sort={sortIndex.get(c.name)}
                 multi={(sort?.length ?? 0) > 1}
                 onSort={onSort}
@@ -671,6 +688,7 @@ export function DataGrid({
                 key={h.id}
                 header={h}
                 column={c}
+                highlight={Number(h.column.id) === focusIndex}
                 sort={sortIndex.get(c.name)}
                 multi={(sort?.length ?? 0) > 1}
                 onSort={onSort}
@@ -733,6 +751,8 @@ interface HeaderCellProps {
   onSortDir?: (column: string, dir: 'asc' | 'desc') => void
   /** Set when the column is pinned: its sticky offset and whether it is the last pinned one. */
   pin?: { x: number; last: boolean }
+  /** The column the global search pointed at. */
+  highlight?: boolean
 }
 
 const menuItem =
@@ -749,6 +769,7 @@ function HeaderCell({
   onHide,
   onSortDir,
   pin,
+  highlight,
 }: HeaderCellProps) {
   const { t } = useTranslation()
   const menu = !!(onHide || onSortDir)
@@ -790,10 +811,12 @@ function HeaderCell({
       role="columnheader"
       aria-colindex={Number(header.column.id) + 1}
       aria-sort={sort ? (sort.dir === 'asc' ? 'ascending' : 'descending') : undefined}
+      data-highlight={highlight || undefined}
       className={cn(
         'group/h relative flex shrink-0 items-center border-r border-border',
         pin && 'sticky z-[4] bg-surface-2',
         pin?.last && pinEdgeX,
+        highlight && 'bg-accent-tint shadow-[inset_0_-2px_0_var(--accent)]',
       )}
       style={{ width: header.getSize(), left: pin?.x }}
     >

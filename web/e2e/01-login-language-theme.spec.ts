@@ -38,6 +38,10 @@ test('login, language and theme', async ({ page }) => {
   // Sign out from settings: back to the login, and the old session no longer works.
   await page.goto(`${urls.auth}/settings`)
   await page.getByRole('button', { name: 'Cerrar sesión' }).first().click()
+  await page
+    .getByRole('dialog', { name: '¿Cerrar sesión?' })
+    .getByRole('button', { name: 'Cerrar sesión' })
+    .click()
   await expect(page).toHaveURL(/\/login/)
   const res = await page.request.get(`${urls.auth}/api/v1/auth/session`)
   expect(res.status()).toBe(401)

@@ -15,7 +15,7 @@ services:
       retries: 30
 
   gresbase:
-    image: ghcr.io/amtzespinosa/gresbase:0.3
+    image: ghcr.io/amtzespinosa/gresbase:0.4
     ports:
       - "127.0.0.1:8080:8080"   # localhost only: without an account there is no login
     environment:

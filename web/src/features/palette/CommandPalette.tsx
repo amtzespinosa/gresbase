@@ -10,6 +10,7 @@ import {
   Moon,
   PanelLeft,
   Plus,
+  ScanSearch,
   Search,
   Settings,
   Star,
@@ -17,13 +18,13 @@ import {
   Table2,
 } from 'lucide-react'
 import { Dialog as D } from 'radix-ui'
-import type { ReactNode } from 'react'
+import { type ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Dialog } from '@/components/ui/Dialog'
 import { Kbd } from '@/components/ui/Kbd'
 import { Flag } from '@/components/Flag'
 import { LabelDot } from '@/components/LabelDot'
-import { useSignOut } from '@/features/auth/useSignOut'
+import { useSignOutDialog } from '@/features/auth/useSignOut'
 import { useSqlEditor } from '@/features/sql/store'
 import { useConfig } from '@/lib/api/queries'
 import { useConnectionId, useConnections } from '@/lib/api/connections'
@@ -92,7 +93,8 @@ function PaletteBody({ onDone }: { onDone: () => void }) {
   )
   // Other connections to switch to (the administrator's saved ones).
   const others = (useConnections().data?.connections ?? []).filter((c) => c.id !== connectionId)
-  const signOut = useSignOut()
+  const askSignOut = useSignOutDialog((s) => s.setOpen)
+  const [query, setQuery] = useState('')
   const setOpen = usePalette((s) => s.setOpen)
 
   const run = (action: () => void) => () => {
@@ -124,11 +126,21 @@ function PaletteBody({ onDone }: { onDone: () => void }) {
   const recentLabel = (r: RecentItem) =>
     r.kind === 'table' ? `${r.schema}.${r.table}` : snippetName(r.path)
 
+  const term = query.trim()
+  const searchAll = () =>
+    void navigate({
+      to: '/c/$connectionId/search',
+      params: { connectionId },
+      search: { q: term },
+    })
+
   return (
     <Command label={t('palette.title')} loop>
       <div className="flex items-center gap-2 border-b border-border px-4">
         <Search className="size-4 shrink-0 text-muted" aria-hidden />
         <Command.Input
+          value={query}
+          onValueChange={setQuery}
           placeholder={t('palette.placeholder')}
           className="h-12 flex-1 bg-transparent text-[14px] outline-none placeholder:text-muted"
         />
@@ -138,6 +150,19 @@ function PaletteBody({ onDone }: { onDone: () => void }) {
         <Command.Empty className="px-4 py-6 text-center text-muted">
           {t('palette.empty')}
         </Command.Empty>
+
+        {term.length >= 2 && (
+          <Command.Group className={groupClass} forceMount>
+            <Item
+              value={`search-all ${term}`}
+              icon={<ScanSearch />}
+              onSelect={run(searchAll)}
+              forceMount
+            >
+              {t('palette.searchAll', { term })}
+            </Item>
+          </Command.Group>
+        )}
 
         {recent.length > 0 && (
           <Command.Group heading={t('palette.recent')} className={groupClass}>
@@ -290,7 +315,11 @@ function PaletteBody({ onDone }: { onDone: () => void }) {
             {t('palette.shortcuts')}
           </Item>
           {authEnabled && (
-            <Item value={t('auth.signOut')} icon={<LogOut />} onSelect={run(signOut)}>
+            <Item
+              value={t('auth.signOut')}
+              icon={<LogOut />}
+              onSelect={run(() => askSignOut(true))}
+            >
               {t('auth.signOut')}
             </Item>
           )}
@@ -306,17 +335,21 @@ function Item({
   shortcut,
   onSelect,
   children,
+  forceMount,
 }: {
   value: string
   icon: ReactNode
   shortcut?: ShortcutId
   onSelect: () => void
   children: ReactNode
+  /** Shown whatever the filter (the "search all tables" entry). */
+  forceMount?: boolean
 }) {
   return (
     <Command.Item
       value={value}
       onSelect={onSelect}
+      forceMount={forceMount}
       className={cn(
         'flex h-9 cursor-pointer items-center gap-2.5 rounded-[9px] px-2.5 text-muted',
         'data-[selected=true]:bg-surface-2 data-[selected=true]:text-text',

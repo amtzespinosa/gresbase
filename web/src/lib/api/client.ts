@@ -75,7 +75,8 @@ export function setConnection(id: string | undefined) {
 }
 
 /** The database routes (internal/server dbRoutes); the rest (auth, config, snippets…) are global. */
-const dbRoute = /^(connection$|schemas($|\/)|tables\/|sql\/|changesets\/|types$|structure($|:))/
+const dbRoute =
+  /^(connection$|schemas($|\/)|tables\/|sql\/|changesets\/|types$|structure($|:)|search$)/
 
 /** `path` under `/api/v1/`, prefixed with the tab's connection when it is a database route. */
 export function apiPath(path: string) {
@@ -113,7 +114,8 @@ export async function api<T>(
   return data as T
 }
 
-async function errorBody(res: Response): Promise<ApiErrorBody> {
+/** The common error body of a failed response (a generic one when it is not JSON). */
+export async function errorBody(res: Response): Promise<ApiErrorBody> {
   try {
     const data = (await res.json()) as { error?: ApiErrorBody }
     if (data.error?.code) return data.error
@@ -139,4 +141,41 @@ export async function download(url: string) {
   a.href = url
   a.download = ''
   a.click()
+}
+
+/**
+ * POSTs to `/api/v1/<path>` and calls `onLine` with each JSON line of an NDJSON answer as it
+ * arrives (the global search streams one event per table). Errors before the stream are thrown
+ * as ApiError, like `api()`.
+ */
+export async function apiStream<T>(
+  path: string,
+  body: unknown,
+  onLine: (line: T) => void,
+  signal?: AbortSignal,
+) {
+  const url = new URL(`${basePath}api/v1/${apiPath(path)}`, window.location.origin)
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/x-ndjson',
+      'Content-Type': 'application/json',
+      'X-Gresbase': '1',
+    },
+    body: JSON.stringify(body),
+    credentials: 'same-origin',
+    signal,
+  })
+  if (res.status === 401) onUnauthorized()
+  if (!res.ok || !res.body) throw new ApiError(res.status, await errorBody(res))
+  const reader = res.body.pipeThrough(new TextDecoderStream()).getReader()
+  let rest = ''
+  for (;;) {
+    const { value, done } = await reader.read()
+    if (done) break
+    const lines = (rest + value).split('\n')
+    rest = lines.pop() ?? ''
+    for (const l of lines) if (l.trim()) onLine(JSON.parse(l) as T)
+  }
+  if (rest.trim()) onLine(JSON.parse(rest) as T)
 }

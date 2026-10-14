@@ -1,7 +1,10 @@
-import { screen, waitFor } from '@testing-library/react'
+import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
 import { safeRedirect } from '@/lib/api/auth'
+import type { TxInfo } from '@/lib/api/types.gen'
+import { useSqlEditor } from '@/features/sql/store'
+import { emptyQueue, tableKey, useChanges } from '@/features/tables/changes/queue'
 import { config, server } from '@/test/msw'
 import { renderApp } from '@/test/render'
 
@@ -72,7 +75,7 @@ test('login is skipped when auth is disabled', async () => {
   await waitFor(() => expect(router.state.location.pathname).toBe('/c/env/tables'))
 })
 
-test('sign out from the sidebar goes to login', async () => {
+test('sign out from the sidebar asks first, then goes to login', async () => {
   let loggedOut = false
   server.use(
     authConfig(),
@@ -83,8 +86,43 @@ test('sign out from the sidebar goes to login', async () => {
   )
   const { router } = renderApp('/tables')
   await userEvent.click(await screen.findByRole('button', { name: 'Sign out' }))
+  const dialog = await screen.findByRole('dialog', { name: 'Sign out?' })
+  expect(dialog).toHaveTextContent('this session will end')
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Cancel' }))
+  expect(loggedOut).toBe(false)
+  expect(router.state.location.pathname).not.toBe('/login')
+
+  await userEvent.click(screen.getByRole('button', { name: 'Sign out' }))
+  const again = await screen.findByRole('dialog', { name: 'Sign out?' })
+  await userEvent.click(within(again).getByRole('button', { name: 'Sign out' }))
   await waitFor(() => expect(router.state.location.pathname).toBe('/login'))
   expect(loggedOut).toBe(true)
+})
+
+test('signing out warns about pending changes and an open transaction, and rolls it back', async () => {
+  let rolledBack = false
+  server.use(
+    authConfig(),
+    http.post('*/api/v1/auth/logout', () => new HttpResponse(null, { status: 204 })),
+    http.post('*/sql/transactions/:id/rollback', () => {
+      rolledBack = true
+      return HttpResponse.json({ status: 'rolled_back' })
+    }),
+  )
+  const update = { pk: { id: 1 }, original: { id: 1, name: 'a' }, set: { name: 'b' } }
+  useChanges.setState({
+    queues: { [tableKey('public', 'users')]: { ...emptyQueue, updates: { '{"id":1}': update } } },
+  })
+  useSqlEditor.setState({ tx: { id: 'tx1' } as TxInfo })
+  const { router } = renderApp('/tables')
+  await userEvent.click(await screen.findByRole('button', { name: 'Sign out' }))
+  const dialog = await screen.findByRole('dialog', { name: 'Sign out?' })
+  expect(dialog).toHaveTextContent('1 unsaved change in the grid will be lost.')
+  expect(dialog).toHaveTextContent('The open SQL transaction will be rolled back.')
+  await userEvent.click(within(dialog).getByRole('button', { name: 'Sign out' }))
+  await waitFor(() => expect(router.state.location.pathname).toBe('/login'))
+  expect(rolledBack).toBe(true)
+  expect(useChanges.getState().queues).toEqual({})
 })
 
 test('only same-app paths are accepted as redirect targets', () => {

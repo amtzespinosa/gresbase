@@ -11,16 +11,16 @@ import (
 // pseudo-types (type I/O, handlers, triggers) are left out: nobody calls them from a query.
 func (c *Catalog) Completions(ctx context.Context) (*Completions, error) {
 	return load(ctx, c, "completions", func(ctx context.Context) (*Completions, error) {
-		rows, _ := c.pool.Query(ctx, `SELECT n.nspname, c.relname, c.relispartition,
+		rows, _ := c.pool.Query(ctx, `SELECT n.nspname, c.relname, c.relispartition, `+kindSQL+`,
 				coalesce(array_agg(a.attname ORDER BY a.attnum) FILTER (WHERE a.attnum > 0), '{}')
 			FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
 			LEFT JOIN pg_attribute a ON a.attrelid = c.oid AND a.attnum > 0 AND NOT a.attisdropped
 			WHERE c.relkind IN ('r', 'v', 'm', 'f', 'p')
 				AND n.nspname !~ '^pg_' AND n.nspname <> 'information_schema'
-			GROUP BY 1, 2, 3 ORDER BY 1, 2`)
+			GROUP BY 1, 2, 3, 4 ORDER BY 1, 2`)
 		tables, err := pgx.CollectRows(rows, func(r pgx.CollectableRow) (CompletionTable, error) {
 			var t CompletionTable
-			return t, r.Scan(&t.Schema, &t.Name, &t.Partition, &t.Columns)
+			return t, r.Scan(&t.Schema, &t.Name, &t.Partition, &t.Kind, &t.Columns)
 		})
 		if err != nil {
 			return nil, fmt.Errorf("completion tables: %w", err)

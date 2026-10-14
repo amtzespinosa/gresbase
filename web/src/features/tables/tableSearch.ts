@@ -42,6 +42,8 @@ export const tableSearch = z.object({
   cursors: z.array(z.string()).default([]).catch([]),
   /** Offset pagination, used only for tables without a primary key. */
   offset: z.number().int().min(0).default(0).catch(0),
+  /** A column to bring into view and highlight (from the global search). */
+  col: z.string().optional().catch(undefined),
 })
 
 export type TableSearch = z.output<typeof tableSearch>

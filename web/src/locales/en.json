@@ -8,7 +8,8 @@
     "sql": "SQL editor",
     "settings": "Settings",
     "collapse": "Collapse sidebar",
-    "expand": "Expand sidebar"
+    "expand": "Expand sidebar",
+    "globalSearch": "Search all tables"
   },
   "theme": {
     "label": "Theme",
@@ -291,7 +292,14 @@
     "invalid": "Wrong username or password."
   },
   "auth": {
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "signOutConfirm": {
+      "title": "Sign out?",
+      "description": "You'll go back to the sign-in screen and this session will end.",
+      "pending_one": "{{count}} unsaved change in the grid will be lost.",
+      "pending_other": "{{count}} unsaved changes in the grid will be lost.",
+      "transaction": "The open SQL transaction will be rolled back."
+    }
   },
   "common": {
     "close": "Close",
@@ -676,7 +684,8 @@
     "shortcuts": "Keyboard shortcuts",
     "connections": "Connections",
     "switchTo": "Switch to {{name}}",
-    "favorites": "Favorites"
+    "favorites": "Favorites",
+    "searchAll": "Search “{{term}}” in all tables"
   },
   "help": {
     "title": "Keyboard shortcuts"
@@ -987,5 +996,46 @@
     "anonymous_volume": "The data directory is an anonymous volume: saved queries and settings are lost when the container is removed.",
     "container_layer": "The data directory is inside the container: saved queries and settings are lost when the container is removed.",
     "fix": "Mount a named volume on /data (GRESBASE_DATA_DIR) to keep them."
+  },
+  "search": {
+    "title": "Search all tables",
+    "label": "Term to search",
+    "placeholder": "Search a value or a name in every table…",
+    "submit": "Search",
+    "includeLarge": "Include large tables",
+    "schemas": "Schemas",
+    "allSchemas": "All schemas",
+    "someSchemas_one": "{{count}} schema",
+    "someSchemas_other": "{{count}} schemas",
+    "emptyTitle": "Search every table at once",
+    "emptyHint": "Type at least two characters. Names of tables, views and columns are searched too.",
+    "structure": "Structure",
+    "data": "Data",
+    "noRows": "No rows contain this term.",
+    "rows_one": "{{count}} row",
+    "rows_other": "{{count}} rows",
+    "progress": "{{done}} of {{total}} tables",
+    "summary_one": "{{count}} row in {{tables}}",
+    "summary_other": "{{count}} rows in {{tables}}",
+    "canceled": "Canceled.",
+    "cancel": "Cancel",
+    "truncated": "Stopped at 500 rows: narrow the term or the schemas.",
+    "skippedLarge_one": "{{count}} large table left out.",
+    "skippedLarge_other": "{{count}} large tables left out.",
+    "skipped_one": "{{count}} table could not be searched",
+    "skipped_other": "{{count}} tables could not be searched",
+    "reason": {
+      "permission": "No permission",
+      "timeout": "Too slow",
+      "error": "Error"
+    },
+    "retry": "Retry with more time",
+    "kind": {
+      "table": "Table",
+      "view": "View",
+      "column": "Column"
+    },
+    "tableCount_one": "{{count}} table",
+    "tableCount_other": "{{count}} tables"
   }
 }

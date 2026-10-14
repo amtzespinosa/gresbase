@@ -4,6 +4,17 @@ Formato: fecha · título · contexto · decisión · alternativa descartada. La
 
 ---
 
+### 2026-10-14 · Búsqueda global en la v0.4; Studio pasa a la v0.5
+- **Contexto:** la búsqueda global, diseñada para después de publicar, se convierte en la siguiente
+  versión.
+- **Decisión:** v0.4 es la búsqueda global y cada versión siguiente sube una (Studio v0.5, administración
+  v0.6, equipos v0.7). Los datos se buscan en el servidor y se envían por partes (NDJSON por tabla); los
+  nombres, en el navegador con las completions que ya están cargadas. Los tipos exactos se comparan con el
+  término convertido al tipo base (`$n::text::numeric`), no al de la columna, para que un `numeric(10,2)`
+  no desborde.
+- **Descartado:** buscar los nombres en el servidor (una consulta más para algo que el navegador ya tiene);
+  WebSockets o sondeo para el progreso (una respuesta en streaming basta y pasa por los proxies).
+
 ### 2026-10-14 · La primera versión pública es la v0.3.0
 - **Contexto:** el plan era no publicar nada hasta la v1.0.
 - **Decisión:** la v0.3.0 es la primera versión pública. El repositorio público recibe una exportación del

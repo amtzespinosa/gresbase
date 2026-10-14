@@ -85,6 +85,10 @@ shows its SQL, and can be undone even after you save it.
     <td><b>Safe by default</b><br><b>Localhost only</b> without login, read-only mode, timeouts, CSRF and rate limits.</td>
   </tr>
   <tr>
+    <td><b>Search all tables</b><br>A value in <b>every table</b> and names of tables and columns, streamed table by table.</td>
+    <td><b>Read-only and roles</b><br>Searches and screens respect <b>the Postgres role</b>: its privileges and row security.</td>
+  </tr>
+  <tr>
     <td><b>Import and export</b><br>CSV into existing tables; exports that <b>stream from the first byte</b>.</td>
     <td><b>Small and private</b><br>One image, works offline, <b>no telemetry</b>; English and Spanish, light and dark.</td>
   </tr>
@@ -115,7 +119,7 @@ Put Gresbase **next to your Postgres** in your `docker-compose.yml`:
 ```yaml
 services:
   gresbase:
-    image: ghcr.io/amtzespinosa/gresbase:0.3
+    image: ghcr.io/amtzespinosa/gresbase:0.4
     restart: unless-stopped
     environment:
       DATABASE_URL: postgres://app:secret@db:5432/app?sslmode=disable
@@ -260,10 +264,9 @@ The image runs on **`linux/amd64` and `linux/arm64`**. Details per version in
 
 ## Roadmap
 
-- **Global search:** find a value in every table, with progress and results grouped by table.
-- **Studio edition (0.4):** advanced mode, visual schema, metrics and a visual `EXPLAIN`.
-- **Administration (0.5):** roles, extensions, views, functions, triggers, RLS and backups.
-- **Teams (0.6):** multiple users with roles, permissions per connection, SSO and an audit log.
+- **Studio edition (0.5):** advanced mode, visual schema, metrics and a visual `EXPLAIN`.
+- **Administration (0.6):** roles, extensions, views, functions, triggers, RLS and backups.
+- **Teams (0.7):** multiple users with roles, permissions per connection, SSO and an audit log.
 
 The full plan is in [`docs/spec.md`](docs/spec.md) (in Spanish).
 

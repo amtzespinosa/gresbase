@@ -1,6 +1,7 @@
 import { Outlet } from '@tanstack/react-router'
 import { isSidebarCollapsed, usePrefs } from '@/lib/prefs/store'
 import { useShortcut } from '@/lib/shortcuts'
+import { SignOutDialog } from '@/features/auth/SignOutDialog'
 import { CommandPalette, ShortcutHelp } from '@/features/palette/CommandPalette'
 import { Sidebar } from './Sidebar'
 
@@ -20,6 +21,7 @@ export function AppShell() {
       </main>
       <CommandPalette />
       <ShortcutHelp />
+      <SignOutDialog />
     </div>
   )
 }

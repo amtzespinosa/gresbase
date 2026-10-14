@@ -16,6 +16,7 @@ Las tablas y consultas son de la conexión abierta en la pestaña actual del nav
 
 | Grupo | Qué contiene |
 | --- | --- |
+| **Buscar «término» en todas las tablas** | Aparece en cuanto escribes dos caracteres. Abre [la búsqueda global](./global-search.md) con lo que has escrito. |
 | **Recientes** | Las últimas tablas y consultas guardadas que abriste en esta conexión, hasta 6. Lo que ya no existe desaparece. |
 | **Favoritas** | Las tablas que marcaste con **Añadir a favoritas** en esta conexión. |
 | **Tablas** | Tablas, vistas, vistas materializadas y tablas foráneas de todos los esquemas, salvo los del sistema. Las particiones no salen: se llega a ellas desde su tabla padre. |
@@ -23,7 +24,7 @@ Las tablas y consultas son de la conexión abierta en la pestaña actual del nav
 | **Conexiones** | Una entrada **Cambiar a** por cada otra conexión guardada. Abre esa conexión en esta pestaña. |
 | **Acciones** | Comandos, más abajo. |
 
-Recientes y favoritas se guardan en este navegador. En [modo libre](./free-mode.md) no hay consultas guardadas, así que ese grupo no aparece.
+Recientes y favoritas se guardan en este navegador. En [modo libre](./free-mode.md), **Consultas guardadas** lista las tuyas, que son privadas.
 
 Solo el administrador recibe la lista de conexiones guardadas, así que solo él ve el grupo **Conexiones**. Mira [Conexiones guardadas](./connections.md).
 

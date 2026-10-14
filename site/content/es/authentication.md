@@ -54,7 +54,7 @@ Una sesión es una cookie firmada llamada `gresbase_session`.
 
 `GRESBASE_SESSION_TTL` fija cuánto dura una sesión. Por defecto son `12h`. Acepta duraciones de Go como `30m`, `8h` o `168h`.
 
-Para salir, usa el botón **Cerrar sesión** de la barra lateral o de la pantalla de Ajustes.
+Para salir, usa el botón **Cerrar sesión** de la barra lateral, de la pantalla de Ajustes o de la paleta de comandos. Gresbase pregunta antes. Si el grid tiene cambios sin guardar, el diálogo dice cuántos se perderán, y una transacción SQL abierta se revierte.
 
 ### El secreto de sesión {#session-secret}
 

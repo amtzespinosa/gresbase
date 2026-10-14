@@ -21,7 +21,7 @@ Each release publishes the image with these tags (`.goreleaser.yaml`). For versi
 | `0.3` | The newest 0.3.x: fixes only. |
 | `latest` | The newest version of all, including a future 0.4 or 1.0. |
 
-Before 1.0, a new minor version (0.4) may change things, so in production pin the minor version in the `image:` line: `{{imageName}}:0.3`. From 1.0 on, each release also gets a major tag (`1`): the newest 1.x, never a new major version. The quick start uses `latest`.
+Before 1.0, a new minor version (0.5) may change things, so in production pin the minor version in the `image:` line: `{{imageName}}:0.4`. From 1.0 on, each release also gets a major tag (`1`): the newest 1.x, never a new major version. The quick start uses `latest`.
 
 ### Pull and recreate {#recreate}
 

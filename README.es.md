@@ -85,6 +85,10 @@ enseña su SQL y se puede deshacer incluso después de guardarlo.
     <td><b>Seguro por defecto</b><br><b>Solo localhost</b> sin login, modo solo lectura, timeouts, CSRF y límite de intentos.</td>
   </tr>
   <tr>
+    <td><b>Buscar en todas las tablas</b><br>Un valor en <b>todas las tablas</b> y nombres de tablas y columnas, tabla a tabla.</td>
+    <td><b>Solo lectura y roles</b><br>Las búsquedas y pantallas respetan <b>el rol de Postgres</b>: sus privilegios y la seguridad por filas.</td>
+  </tr>
+  <tr>
     <td><b>Importar y exportar</b><br>CSV a tablas existentes; exportaciones que <b>llegan desde el primer byte</b>.</td>
     <td><b>Pequeño y privado</b><br>Una imagen, funciona sin internet, <b>sin telemetría</b>; en español e inglés, claro y oscuro.</td>
   </tr>
@@ -115,7 +119,7 @@ Pon Gresbase **junto a tu Postgres** en tu `docker-compose.yml`:
 ```yaml
 services:
   gresbase:
-    image: ghcr.io/amtzespinosa/gresbase:0.3
+    image: ghcr.io/amtzespinosa/gresbase:0.4
     restart: unless-stopped
     environment:
       DATABASE_URL: postgres://app:secret@db:5432/app?sslmode=disable
@@ -262,10 +266,9 @@ La imagen funciona en **`linux/amd64` y `linux/arm64`**. El detalle por versión
 
 ## Hoja de ruta
 
-- **Búsqueda global:** encontrar un valor en todas las tablas, con progreso y resultados por tabla.
-- **Edición Studio (0.4):** modo avanzado, esquema visual, métricas y `EXPLAIN` visual.
-- **Administración (0.5):** roles, extensiones, vistas, funciones, triggers, RLS y copias de seguridad.
-- **Equipos (0.6):** varios usuarios con roles, permisos por conexión, SSO y registro de auditoría.
+- **Edición Studio (0.5):** modo avanzado, esquema visual, métricas y `EXPLAIN` visual.
+- **Administración (0.6):** roles, extensiones, vistas, funciones, triggers, RLS y copias de seguridad.
+- **Equipos (0.7):** varios usuarios con roles, permisos por conexión, SSO y registro de auditoría.
 
 El plan completo está en [`docs/spec.md`](docs/spec.md).
 

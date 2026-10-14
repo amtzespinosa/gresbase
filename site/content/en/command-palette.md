@@ -16,14 +16,15 @@ Tables and queries belong to the connection open in the current browser tab. Gro
 
 | Group | What it holds |
 | --- | --- |
+| **Search “term” in all tables** | Shows as soon as you type two characters. It opens [the global search](./global-search.md) with what you typed. |
 | **Recent** | The last tables and saved queries you opened on this connection, up to 6. Items that no longer exist drop out. |
 | **Favorites** | The tables you marked with **Add to favorites** on this connection. |
 | **Tables** | Tables, views, materialized views and foreign tables of every schema, except the system ones. Partitions are left out: you reach them from their parent table. |
 | **Saved queries** | Your saved queries: the ones for all connections and the ones for this connection. |
-| **Connections** One **Switch to** entry per other saved connection. It opens that connection in this tab. |
+| **Connections** | One **Switch to** entry per other saved connection. It opens that connection in this tab. |
 | **Actions** | Commands, listed below. |
 
-Recent items and favorites live in this browser. Saved queries are not available in [free mode](./free-mode.md), so that group does not show there.
+Recent items and favorites live in this browser. In [free mode](./free-mode.md), **Saved queries** lists your own private ones.
 
 Only the administrator gets the list of saved connections, so only they see the **Connections** group. See [Saved connections](./connections.md).
 

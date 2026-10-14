@@ -5,9 +5,27 @@ import { completionConfig, errorRange } from './editor'
 
 const completions: Completions = {
   tables: [
-    { schema: 'public', name: 'users', columns: ['id', 'email', 'org_id'], partition: false },
-    { schema: 'billing', name: 'plans', columns: ['code', 'price'], partition: false },
-    { schema: 'app', name: 'orgs', columns: ['org_name', 'Display Name'], partition: false },
+    {
+      schema: 'public',
+      name: 'users',
+      kind: 'table',
+      columns: ['id', 'email', 'org_id'],
+      partition: false,
+    },
+    {
+      schema: 'billing',
+      name: 'plans',
+      kind: 'table',
+      columns: ['code', 'price'],
+      partition: false,
+    },
+    {
+      schema: 'app',
+      name: 'orgs',
+      kind: 'table',
+      columns: ['org_name', 'Display Name'],
+      partition: false,
+    },
   ],
   functions: ['now', 'jsonb_build_object'],
   search_path: ['public', 'app'],

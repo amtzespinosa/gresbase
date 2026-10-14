@@ -69,6 +69,10 @@ func sql(f func(api.SQL, http.ResponseWriter, *http.Request)) http.HandlerFunc {
 	}
 }
 
+func searchHandler(w http.ResponseWriter, r *http.Request) {
+	api.Search{Pool: connections.From(r.Context()).Pool}.Run(w, r)
+}
+
 func connectionInfo(w http.ResponseWriter, r *http.Request) {
 	info, err := pg.Info(r.Context(), connections.From(r.Context()).Pool)
 	if err != nil {
@@ -113,6 +117,7 @@ func dbRoutes(r chi.Router, p string) {
 	long.Post(p+"/structure", changesets(api.Changesets.Structure))
 	long.Post(p+"/sql/execute", sql(api.SQL.Execute))
 	r.Post(p+"/sql/analyze", sql(api.SQL.Analyze))
+	r.Post(p+"/search", searchHandler)
 	r.Post(p+"/sql/executions/{id}/cancel", sql(api.SQL.Cancel))
 	r.Post(p+"/sql/transactions", sql(api.SQL.Begin))
 	r.Get(p+"/sql/transactions", sql(api.SQL.Txs))

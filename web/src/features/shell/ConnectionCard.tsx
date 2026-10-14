@@ -15,6 +15,7 @@ import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { IconButton } from '@/components/ui/IconButton'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { ApiError } from '@/lib/api/client'
+import { SignOutWarnings } from '@/features/auth/SignOutDialog'
 import { useSignOut } from '@/features/auth/useSignOut'
 import {
   labelColor,
@@ -171,9 +172,11 @@ function SessionMenu() {
         confirmLabel={t('connect.disconnect')}
         onConfirm={() => {
           setConfirm(null)
-          signOut()
+          void signOut()
         }}
-      />
+      >
+        <SignOutWarnings />
+      </ConfirmDialog>
     </>
   )
 }

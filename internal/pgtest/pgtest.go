@@ -25,6 +25,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
+	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 // User is the role of the test server.
@@ -111,7 +112,12 @@ func start() {
 	}
 	shared.ctr, err = postgres.Run(ctx, img,
 		postgres.WithDatabase("app"), postgres.WithUsername(User), postgres.WithPassword(Password),
-		postgres.WithOrderedInitScripts(seed...), postgres.BasicWaitStrategies(),
+		postgres.WithOrderedInitScripts(seed...),
+		// The module's waits (ready twice: after initdb and after the restart), with 3 minutes instead of
+		// 1: with several versions tested at once, initdb and the seed can take longer than a minute.
+		testcontainers.WithWaitStrategyAndDeadline(3*time.Minute,
+			wait.ForLog("database system is ready to accept connections").WithOccurrence(2),
+			wait.ForListeningPort("5432/tcp")),
 		// The data directory lives in RAM and initdb skips its final fsync: startup (initdb, seed,
 		// restart) no longer depends on the disk, which under I/O pressure (image builds, several
 		// containers seeding at once) stretched it past the wait timeout. The module already runs the

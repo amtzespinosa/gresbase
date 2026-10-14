@@ -54,7 +54,7 @@ A session is a signed cookie called `gresbase_session`.
 
 `GRESBASE_SESSION_TTL` sets how long a session lasts. The default is `12h`. It takes a Go duration such as `30m`, `8h` or `168h`.
 
-Sign out with the **Sign out** button in the sidebar or on the Settings screen.
+Sign out with the **Sign out** button in the sidebar, on the Settings screen or in the command palette. Gresbase asks first. If the grid has unsaved changes, the dialog says how many will be lost, and an open SQL transaction is rolled back.
 
 ### The session secret {#session-secret}
 

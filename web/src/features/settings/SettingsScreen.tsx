@@ -6,7 +6,7 @@ import { LanguageSwitch } from '@/components/LanguageSwitch'
 import { Button } from '@/components/ui/Button'
 import { Card } from '@/components/ui/Card'
 import { SegmentedControl } from '@/components/ui/SegmentedControl'
-import { useSignOut } from '@/features/auth/useSignOut'
+import { useSignOutDialog } from '@/features/auth/useSignOut'
 import { ConnectionsSection } from '@/features/connections/ConnectionsSection'
 import { useConfig, useConnection } from '@/lib/api/queries'
 import { useServerSettings, useSession } from '@/lib/api/settings'
@@ -70,7 +70,7 @@ export function SettingsScreen() {
   const config = useConfig().data
   const session = useSession().data
   const connection = useConnection().data
-  const signOut = useSignOut()
+  const askSignOut = useSignOutDialog((s) => s.setOpen)
   const admin = !!config && !config.free_mode && session?.role === 'admin'
   const server = useServerSettings(admin)
   const dataLoss = useDataLossText(server.data?.data_loss)
@@ -154,7 +154,7 @@ export function SettingsScreen() {
                 )}
                 {config.auth_enabled && (
                   <div>
-                    <Button onClick={signOut}>
+                    <Button onClick={() => askSignOut(true)}>
                       <LogOut className="size-4" aria-hidden />
                       {t('auth.signOut')}
                     </Button>

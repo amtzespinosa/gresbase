@@ -40,6 +40,9 @@ packages:
       /** One cell (see the value encoding in AGENTS.md). json/jsonb columns hold any JSON value. */
       export type Cell = null | boolean | number | string | Cell[] | ByteaCell | TruncatedCell | { [key: string]: unknown };
       export type FilterOp = 'eq' | 'neq' | 'lt' | 'lte' | 'gt' | 'gte' | 'contains' | 'starts_with' | 'is_null' | 'not_null' | 'in' | 'between' | 'json_contains';
+  - path: github.com/amtzespinosa/gresbase/internal/pg/search
+    output_path: tmp/tygo/5b-search.ts
+    include_files: [types.go]
   - path: github.com/amtzespinosa/gresbase/internal/pg/write
     output_path: tmp/tygo/6-write.ts
     include_files: [types.go]

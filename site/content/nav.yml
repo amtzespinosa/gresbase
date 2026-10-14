@@ -26,6 +26,7 @@
     - { slug: import-export, en: Import and export, es: Importar y exportar }
     - { slug: structure, en: Structure and relations, es: Estructura y relaciones }
     - { slug: sql-editor, en: SQL editor, es: Editor SQL }
+    - { slug: global-search, en: Search all tables, es: Buscar en todas las tablas }
     - { slug: command-palette, en: Command palette, es: Paleta de comandos }
     - { slug: preferences, en: Language and theme, es: Idioma y tema }
 - title: { en: Operations, es: Operación }

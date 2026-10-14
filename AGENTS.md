@@ -173,6 +173,12 @@ Run `task ci:quick` before opening a pull request. GitHub Actions runs the same 
 - **Long requests** (`/sql/execute`, CSV import, `/structure`) go behind `api.Heartbeat`: with no answer
   after 10 s the server sends `200` and a space every 10 s so proxies don't cut them; a later error arrives
   as a `200` with `{"error": …}`, which `api()` throws as an `ApiError`.
+- **Global search** (`POST /search`, `internal/pg/search`): the answer is NDJSON, one event per line
+  (`start`, then `table` or `skipped` per table, then `done`), flushed as each table finishes, with
+  `X-Accel-Buffering: no` and `Cache-Control: no-store, no-transform` so proxies pass it on at once. Each
+  table runs in its own read-only transaction with its own `statement_timeout`; only tables and columns
+  the role can `SELECT` are listed. Names of tables and columns are searched in the browser, from the SQL
+  completions.
 - `/sql/execute` accepts `params` (values of the editor's `:name` parameters), sent as untyped bound
   parameters, never written into the SQL.
 

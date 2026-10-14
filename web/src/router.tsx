@@ -29,6 +29,10 @@ const SettingsScreen = lazyRouteComponent(
   'SettingsScreen',
 )
 const SetupWizard = lazyRouteComponent(() => import('@/features/setup/SetupWizard'), 'SetupWizard')
+const SearchScreen = lazyRouteComponent(
+  () => import('@/features/search/SearchScreen'),
+  'SearchScreen',
+)
 
 export interface RouterContext {
   queryClient: QueryClient
@@ -111,6 +115,18 @@ const sqlSnippetRoute = createRoute({
   component: SqlScreen,
 })
 
+/** The global search: the term and the schemas live in the URL, so a search can be shared. */
+const globalSearch = z.object({
+  q: z.string().optional().catch(undefined),
+  schemas: z.array(z.string()).optional().catch(undefined),
+})
+const searchRoute = createRoute({
+  getParentRoute: () => connRoute,
+  path: '/search',
+  validateSearch: globalSearch,
+  component: SearchScreen,
+})
+
 const settingsRoute = createRoute({
   getParentRoute: () => connRoute,
   path: '/settings',
@@ -191,6 +207,20 @@ const legacy = {
       })
     },
   }),
+  search: createRoute({
+    getParentRoute: () => rootRoute,
+    path: '/search',
+    validateSearch: globalSearch,
+    beforeLoad: async ({ context, search }) => {
+      const connectionId = await defaultConnection(context.queryClient)
+      throw redirect({
+        to: '/c/$connectionId/search',
+        params: { connectionId },
+        search,
+        replace: true,
+      })
+    },
+  }),
   settings: createRoute({
     getParentRoute: () => rootRoute,
     path: '/settings',
@@ -227,6 +257,7 @@ const routeTree = rootRoute.addChildren([
     tablesRoute.addChildren([tablesIndexRoute, tableRoute]),
     sqlRoute,
     sqlSnippetRoute,
+    searchRoute,
     settingsRoute,
   ]),
   ...Object.values(legacy),
