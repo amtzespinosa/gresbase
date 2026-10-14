@@ -2,10 +2,7 @@
 
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/brand/logo-dark.svg">
-  <img src="assets/brand/logo.svg" width="88" height="88" alt="Gresbase logo, a mammoth">
-</picture>
+<img src="assets/brand/app-icon.svg" width="96" height="96" alt="Gresbase logo: a black mammoth on a yellow square">
 
 <h1>gresbase</h1>
 
@@ -40,9 +37,14 @@
 - [Why Gresbase](#why-gresbase)
 - [Features](#features)
 - [Quick start](#quick-start)
+  - [Try the demo](#try-the-demo)
+  - [Add it to your project](#add-it-to-your-project)
+  - [No configuration: the setup wizard](#no-configuration-the-setup-wizard)
 - [Screenshots](#screenshots)
 - [How it compares](#how-it-compares)
 - [Configuration](#configuration)
+  - [Main variables](#main-variables)
+  - [Settings file](#settings-file)
 - [Security](#security)
 - [Compatibility](#compatibility)
 - [Roadmap](#roadmap)
@@ -51,58 +53,64 @@
 
 ## Why Gresbase
 
-Adminer and pgAdmin still do the job, but they look and feel like another decade, and an edit goes
-straight to the database. Supabase Studio is a pleasure to use, but it comes with the Supabase stack.
-Gresbase is one small container you add next to your Postgres: a fast, careful interface where every
-change waits in a queue, shows its SQL, and can be undone even after you save it.
+Adminer and pgAdmin still do the job, but they **feel like another decade**, and an edit goes straight
+to the database. Supabase Studio is a pleasure to use, but it **comes with the Supabase stack**.
+
+Gresbase is **one small container** you add next to your Postgres. Every change **waits in a queue**,
+shows its SQL, and can be undone even after you save it.
+
+<div align="right"><a href="#readme">↑ Back to top</a></div>
 
 ## Features
 
 <table>
   <tr>
-    <td width="50%"><b>Fast tables</b><br>Virtualized grid, keyset pagination, filters and multi-column sort kept in the URL.</td>
-    <td width="50%"><b>Change queue</b><br>Edits wait with a diff and their SQL, then save in one transaction.</td>
+    <td width="50%"><b>Fast tables</b><br>Virtualized grid, <b>keyset pagination</b>, filters and multi-column sort kept in the URL.</td>
+    <td width="50%"><b>Change queue</b><br>Edits wait with a diff and their SQL, then save in <b>one transaction</b>.</td>
   </tr>
   <tr>
-    <td><b>Undo and redo</b><br>Even after saving, through inverse operations that check for conflicts.</td>
-    <td><b>Structure editing</b><br>Tables, columns, indexes, constraints and foreign keys, previewing the exact DDL.</td>
+    <td><b>Undo and redo</b><br><b>Even after saving</b>, through inverse operations that check for conflicts.</td>
+    <td><b>Structure editing</b><br>Tables, columns, indexes, constraints and foreign keys, previewing <b>the exact DDL</b>.</td>
   </tr>
   <tr>
-    <td><b>SQL editor</b><br>Autocomplete, tabs, <code>:name</code> parameters, transaction mode, history and saved queries.</td>
-    <td><b>Spreadsheet friendly</b><br>Copy a rectangle as TSV, CSV, JSON or <code>INSERT</code>; paste into the queue.</td>
+    <td><b>SQL editor</b><br><b>Autocomplete</b>, tabs, <code>:name</code> parameters, transaction mode, history and saved queries.</td>
+    <td><b>Spreadsheet friendly</b><br>Copy a rectangle as TSV, CSV, JSON or <code>INSERT</code>; <b>paste into the queue</b>.</td>
   </tr>
   <tr>
-    <td><b>Many connections</b><br>Saved connections with color labels; each browser tab can use a different one.</td>
-    <td><b>Free mode</b><br>Sign in with any Postgres user and password, like Adminer, with an allowlist.</td>
+    <td><b>Many connections</b><br>Saved connections with color labels; <b>each browser tab</b> can use a different one.</td>
+    <td><b>Free mode</b><br>Sign in with <b>any Postgres user</b>, like Adminer, limited to the servers you allow.</td>
   </tr>
   <tr>
-    <td><b>Zero config</b><br>Environment variables or a setup wizard; settings in one file, secrets encrypted.</td>
-    <td><b>Safe by default</b><br>Localhost only without login, read-only mode, timeouts, CSRF and rate limits.</td>
+    <td><b>Zero config</b><br>Environment variables or <b>a setup wizard</b>; settings in one file, secrets encrypted.</td>
+    <td><b>Safe by default</b><br><b>Localhost only</b> without login, read-only mode, timeouts, CSRF and rate limits.</td>
   </tr>
   <tr>
-    <td><b>Import and export</b><br>CSV into existing tables; CSV and JSON exports that stream from the first byte.</td>
-    <td><b>Small and private</b><br>One image, works offline, no telemetry; English and Spanish, light and dark.</td>
+    <td><b>Import and export</b><br>CSV into existing tables; exports that <b>stream from the first byte</b>.</td>
+    <td><b>Small and private</b><br>One image, works offline, <b>no telemetry</b>; English and Spanish, light and dark.</td>
   </tr>
 </table>
+
+<div align="right"><a href="#readme">↑ Back to top</a></div>
 
 ## Quick start
 
 ### Try the demo
 
-PostgreSQL with sample data and Gresbase, using the published image. You only need Docker:
+PostgreSQL with sample data and Gresbase, using the published image. **You only need Docker:**
 
 ```bash
 curl -fsSLO https://raw.githubusercontent.com/amtzespinosa/gresbase/main/deploy/docker-compose.demo.yml
 docker compose -f docker-compose.demo.yml up -d
 ```
 
-Open <http://localhost:8080>. The file also starts one instance per way of using Gresbase on ports
-8081 to 8084 (login, read-only, setup wizard and free mode), described at the top of the file.
-`docker compose -f docker-compose.demo.yml down -v` removes everything.
+Open **<http://localhost:8080>**. Ports 8081 to 8084 run the other ways of using Gresbase: login,
+read-only, setup wizard and free mode, described at the top of the file.
+
+To remove everything: `docker compose -f docker-compose.demo.yml down -v`.
 
 ### Add it to your project
 
-Put Gresbase next to your Postgres in your `docker-compose.yml`:
+Put Gresbase **next to your Postgres** in your `docker-compose.yml`:
 
 ```yaml
 services:
@@ -124,54 +132,55 @@ volumes:
 docker compose up -d
 ```
 
-Open <http://localhost:8080>. Without `DATABASE_URL`, Gresbase starts a setup wizard instead: the log
-prints a link with its token, and `docker compose exec gresbase /gresbase setup-token` prints the token.
-The [quick start guide](https://gresbase.pages.dev/docs/quick-start/) covers `docker run`, the wizard and
-connecting to a database outside Docker. Binaries for Linux, macOS and Windows are attached to each
+Then open <http://localhost:8080>. Binaries for **Linux, macOS and Windows** are attached to each
 [release](https://github.com/amtzespinosa/gresbase/releases).
+
+### No configuration: the setup wizard
+
+Leave out `DATABASE_URL` and Gresbase **starts a setup wizard**. The log prints a link with its token,
+or print the token with:
+
+```bash
+docker compose exec gresbase /gresbase setup-token
+```
+
+The [quick start guide](https://gresbase.pages.dev/docs/quick-start/) covers `docker run`, the wizard
+and **databases outside Docker**.
+
+<div align="right"><a href="#readme">↑ Back to top</a></div>
 
 ## Screenshots
 
 <table>
   <tr>
     <td width="50%">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/tables-desktop-dark.png">
-        <img src="docs/screenshots/tables-desktop-light.png" alt="Tables: the grid with the table list">
-      </picture>
-      <p align="center"><sub>Tables</sub></p>
+      <img src="docs/screenshots/tables-desktop-light.png" alt="Tables, light theme">
+      <p align="center"><sub>Tables · light</sub></p>
     </td>
     <td width="50%">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/sql-desktop-dark.png">
-        <img src="docs/screenshots/sql-desktop-light.png" alt="SQL editor with results">
-      </picture>
-      <p align="center"><sub>SQL editor</sub></p>
+      <img src="docs/screenshots/sql-desktop-dark.png" alt="SQL editor with results, dark theme">
+      <p align="center"><sub>SQL editor · dark</sub></p>
     </td>
   </tr>
   <tr>
-    <td>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/structure-desktop-dark.png">
-        <img src="docs/screenshots/structure-desktop-light.png" alt="Structure: columns, indexes and constraints">
-      </picture>
-      <p align="center"><sub>Structure</sub></p>
+    <td width="50%">
+      <img src="docs/screenshots/structure-desktop-dark.png" alt="Structure: columns, indexes and constraints, dark theme">
+      <p align="center"><sub>Structure · dark</sub></p>
     </td>
-    <td>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/setup-desktop-dark.png">
-        <img src="docs/screenshots/setup-desktop-light.png" alt="Setup wizard, first step">
-      </picture>
-      <p align="center"><sub>Setup wizard</sub></p>
+    <td width="50%">
+      <img src="docs/screenshots/setup-desktop-light.png" alt="Setup wizard, first step, light theme">
+      <p align="center"><sub>Setup wizard · light</sub></p>
     </td>
   </tr>
 </table>
 
 More screens, on desktop and tablet, in [`docs/screenshots/`](docs/screenshots/).
 
+<div align="right"><a href="#readme">↑ Back to top</a></div>
+
 ## How it compares
 
-Every tool here is good at something. This is how they differ for the job Gresbase does: a web UI
+Every tool here is good at something. This is how they differ **for the job Gresbase does**: a web UI
 next to your own Postgres.
 
 | | Gresbase | Adminer | pgAdmin | Supabase Studio | DbGate |
@@ -185,12 +194,16 @@ next to your own Postgres.
 | Server administration (roles, backups, monitoring) | Not yet | Partial | Yes | Platform features | Partial |
 | License | Apache-2.0 | Apache-2.0 or GPL-2.0 | PostgreSQL | Apache-2.0 | GPL-3.0 |
 
-Pick pgAdmin for deep server administration, Adminer or DbGate when you work with several database
-engines, and Supabase Studio if you run Supabase.
+Pick **pgAdmin** for deep server administration, **Adminer or DbGate** when you work with several
+database engines, and **Supabase Studio** if you run Supabase.
+
+<div align="right"><a href="#readme">↑ Back to top</a></div>
 
 ## Configuration
 
-Every setting is optional. The ones you are most likely to use:
+**Every setting is optional.** Use environment variables, or change settings from the app.
+
+### Main variables
 
 | Variable | What it does |
 | --- | --- |
@@ -205,24 +218,31 @@ Every setting is optional. The ones you are most likely to use:
 | `GRESBASE_STATEMENT_TIMEOUT` | Time limit per query (`30s` by default). |
 | `GRESBASE_DATA_DIR` | Settings and saved queries (`/data`); mount a volume there. |
 
-Settings changed in the app are kept in `gresbase.json`, and an environment variable always wins over
-it. All variables, ports and limits are in the
+### Settings file
+
+Settings changed in the app are kept in `gresbase.json`, and **an environment variable always wins**
+over it. Secrets in that file are encrypted.
+
+All variables, ports and limits are in the
 [configuration reference](https://gresbase.pages.dev/docs/configuration-reference/).
+
+<div align="right"><a href="#readme">↑ Back to top</a></div>
 
 ## Security
 
-- Without an account, Gresbase only answers requests for `localhost`, against accidental exposure and
-  DNS rebinding.
-- Passwords are stored as argon2id hashes, secrets in `gresbase.json` are encrypted, and logs never
+- Without an account, Gresbase **only answers requests for `localhost`**, against accidental exposure
+  and DNS rebinding.
+- Passwords are stored as **argon2id hashes**, secrets in `gresbase.json` are encrypted, and logs never
   contain credentials.
-- Sessions use `SameSite=Strict` cookies and a CSRF header; failed sign-ins are rate limited.
-- Read-only mode is enforced twice: by the database session and by the API.
-- Every query has a timeout. Long queries stay alive behind Nginx or Cloudflare without raising any
-  proxy timeout.
-- The real boundary is the Postgres role you connect with: give it only the privileges you want.
+- Sessions use `SameSite=Strict` cookies and a CSRF header; **failed sign-ins are rate limited**.
+- Read-only mode is **enforced twice**: by the database session and by the API.
+- Every query has a timeout, and long queries **stay alive behind Nginx or Cloudflare**.
+- The real boundary is **the Postgres role you connect with**: give it only the privileges you want.
 
 Reverse proxies, HTTPS and the setup token are covered in
 [Security and networking](https://gresbase.pages.dev/docs/security/).
+
+<div align="right"><a href="#readme">↑ Back to top</a></div>
 
 ## Compatibility
 
@@ -233,8 +253,10 @@ Reverse proxies, HTTPS and the setup token are covered in
 | 12, 13 | Legacy: tested on every change; a few features depend on the version and the UI says so |
 | 11 and older | Not supported; Gresbase explains it when connecting |
 
-The image runs on `linux/amd64` and `linux/arm64`. Details per version in
+The image runs on **`linux/amd64` and `linux/arm64`**. Details per version in
 [`docs/compatibility.md`](docs/compatibility.md) (in Spanish).
+
+<div align="right"><a href="#readme">↑ Back to top</a></div>
 
 ## Roadmap
 
@@ -245,20 +267,30 @@ The image runs on `linux/amd64` and `linux/arm64`. Details per version in
 
 The full plan is in [`docs/spec.md`](docs/spec.md) (in Spanish).
 
+<div align="right"><a href="#readme">↑ Back to top</a></div>
+
 ## Contributing
 
-Issues and pull requests are welcome. Start with [`CONTRIBUTING.md`](CONTRIBUTING.md); the stack,
+**Issues and pull requests are welcome.** Start with [`CONTRIBUTING.md`](CONTRIBUTING.md); the stack,
 the security rules and the conventions are in [`AGENTS.md`](AGENTS.md), for people and coding agents
-alike. You only need Docker and git: every toolchain runs in the development container.
+alike.
+
+You **only need Docker and git**: every toolchain runs in the development container.
 
 ```bash
 docker compose -f dev.compose.yml up -d --build
 docker compose -f dev.compose.yml exec workspace bash -lc "task dev"
 ```
 
+<div align="right"><a href="#readme">↑ Back to top</a></div>
+
 ## License
 
-Gresbase is licensed under the [Apache License 2.0](LICENSE). Copyright 2026 Alex M. Espinosa; see
-[`NOTICE`](NOTICE). The Gresbase name and the mammoth logo are not covered by the license: forks use
-another name and logo, as explained in [`TRADEMARKS.md`](TRADEMARKS.md). Third-party licenses are listed
-in [`docs/third-party-licenses.md`](docs/third-party-licenses.md).
+Gresbase is licensed under the **[Apache License 2.0](LICENSE)**. Copyright 2026 Alex M. Espinosa; see
+[`NOTICE`](NOTICE).
+
+The **Gresbase name and the mammoth logo** are not covered by the license: forks use another name and
+logo, as explained in [`TRADEMARKS.md`](TRADEMARKS.md). Third-party licenses are listed in
+[`docs/third-party-licenses.md`](docs/third-party-licenses.md).
+
+<div align="right"><a href="#readme">↑ Back to top</a></div>

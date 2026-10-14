@@ -2,10 +2,7 @@
 
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/brand/logo-dark.svg">
-  <img src="assets/brand/logo.svg" width="88" height="88" alt="Logo de Gresbase, un mamut">
-</picture>
+<img src="assets/brand/app-icon.svg" width="96" height="96" alt="Logo de Gresbase: un mamut negro sobre un cuadrado amarillo">
 
 <h1>gresbase</h1>
 
@@ -40,9 +37,14 @@
 - [Por qué Gresbase](#por-qué-gresbase)
 - [Funciones](#funciones)
 - [Inicio rápido](#inicio-rápido)
+  - [Prueba la demo](#prueba-la-demo)
+  - [Añádelo a tu proyecto](#añádelo-a-tu-proyecto)
+  - [Sin configuración: el asistente](#sin-configuración-el-asistente)
 - [Capturas](#capturas)
 - [Comparativa](#comparativa)
 - [Configuración](#configuración)
+  - [Variables principales](#variables-principales)
+  - [Fichero de ajustes](#fichero-de-ajustes)
 - [Seguridad](#seguridad)
 - [Compatibilidad](#compatibilidad)
 - [Hoja de ruta](#hoja-de-ruta)
@@ -51,58 +53,64 @@
 
 ## Por qué Gresbase
 
-Adminer y pgAdmin siguen cumpliendo, pero se ven y se usan como hace una década, y cada edición va
-directa a la base de datos. Supabase Studio es un gusto de usar, pero viene con todo Supabase. Gresbase
-es un contenedor pequeño que pones junto a tu Postgres: una interfaz rápida y cuidadosa en la que cada
-cambio espera en una cola, enseña su SQL y se puede deshacer incluso después de guardarlo.
+Adminer y pgAdmin siguen cumpliendo, pero **se sienten de otra década**, y cada edición va directa a la
+base de datos. Supabase Studio es un gusto de usar, pero **viene con todo Supabase**.
+
+Gresbase es **un contenedor pequeño** que pones junto a tu Postgres. Cada cambio **espera en una cola**,
+enseña su SQL y se puede deshacer incluso después de guardarlo.
+
+<div align="right"><a href="#readme">↑ Volver arriba</a></div>
 
 ## Funciones
 
 <table>
   <tr>
-    <td width="50%"><b>Tablas rápidas</b><br>Grid virtualizado, paginación por clave, filtros y orden por varias columnas en la URL.</td>
-    <td width="50%"><b>Cola de cambios</b><br>Las ediciones esperan con su diff y su SQL, y se guardan en una transacción.</td>
+    <td width="50%"><b>Tablas rápidas</b><br>Grid virtualizado, <b>paginación por clave</b>, filtros y orden por varias columnas en la URL.</td>
+    <td width="50%"><b>Cola de cambios</b><br>Las ediciones esperan con su diff y su SQL, y se guardan en <b>una transacción</b>.</td>
   </tr>
   <tr>
-    <td><b>Deshacer y rehacer</b><br>También después de guardar, con operaciones inversas que comprueban conflictos.</td>
-    <td><b>Edición de estructura</b><br>Tablas, columnas, índices, restricciones y claves foráneas, con el DDL exacto antes.</td>
+    <td><b>Deshacer y rehacer</b><br><b>También después de guardar</b>, con operaciones inversas que comprueban conflictos.</td>
+    <td><b>Edición de estructura</b><br>Tablas, columnas, índices, restricciones y claves foráneas, con <b>el DDL exacto</b> antes.</td>
   </tr>
   <tr>
-    <td><b>Editor SQL</b><br>Autocompletado, pestañas, parámetros <code>:nombre</code>, modo transacción, historial y consultas guardadas.</td>
-    <td><b>Como una hoja de cálculo</b><br>Copia un rectángulo como TSV, CSV, JSON o <code>INSERT</code>; pega en la cola.</td>
+    <td><b>Editor SQL</b><br><b>Autocompletado</b>, pestañas, parámetros <code>:nombre</code>, modo transacción, historial y consultas guardadas.</td>
+    <td><b>Como una hoja de cálculo</b><br>Copia un rectángulo como TSV, CSV, JSON o <code>INSERT</code>; <b>pega en la cola</b>.</td>
   </tr>
   <tr>
-    <td><b>Varias conexiones</b><br>Conexiones guardadas con etiqueta de color; cada pestaña del navegador puede usar una.</td>
-    <td><b>Modo libre</b><br>Entra con cualquier usuario y contraseña de Postgres, como en Adminer, con lista de servidores.</td>
+    <td><b>Varias conexiones</b><br>Conexiones guardadas con etiqueta de color; <b>cada pestaña del navegador</b> puede usar una.</td>
+    <td><b>Modo libre</b><br>Entra con <b>cualquier usuario de Postgres</b>, como en Adminer, solo en los servidores que permitas.</td>
   </tr>
   <tr>
-    <td><b>Cero configuración</b><br>Variables de entorno o un asistente; ajustes en un fichero, secretos cifrados.</td>
-    <td><b>Seguro por defecto</b><br>Solo localhost sin login, modo solo lectura, timeouts, CSRF y límite de intentos.</td>
+    <td><b>Cero configuración</b><br>Variables de entorno o <b>un asistente</b>; ajustes en un fichero, secretos cifrados.</td>
+    <td><b>Seguro por defecto</b><br><b>Solo localhost</b> sin login, modo solo lectura, timeouts, CSRF y límite de intentos.</td>
   </tr>
   <tr>
-    <td><b>Importar y exportar</b><br>CSV a tablas existentes; exportaciones CSV y JSON que llegan desde el primer byte.</td>
-    <td><b>Pequeño y privado</b><br>Una imagen, funciona sin internet, sin telemetría; en español e inglés, claro y oscuro.</td>
+    <td><b>Importar y exportar</b><br>CSV a tablas existentes; exportaciones que <b>llegan desde el primer byte</b>.</td>
+    <td><b>Pequeño y privado</b><br>Una imagen, funciona sin internet, <b>sin telemetría</b>; en español e inglés, claro y oscuro.</td>
   </tr>
 </table>
+
+<div align="right"><a href="#readme">↑ Volver arriba</a></div>
 
 ## Inicio rápido
 
 ### Prueba la demo
 
-PostgreSQL con datos de ejemplo y Gresbase, con la imagen publicada. Solo necesitas Docker:
+PostgreSQL con datos de ejemplo y Gresbase, con la imagen publicada. **Solo necesitas Docker:**
 
 ```bash
 curl -fsSLO https://raw.githubusercontent.com/amtzespinosa/gresbase/main/deploy/docker-compose.demo.yml
 docker compose -f docker-compose.demo.yml up -d
 ```
 
-Abre <http://localhost:8080>. El fichero arranca además una instancia por cada forma de usar Gresbase en
-los puertos 8081 a 8084 (con login, solo lectura, asistente y modo libre), descritas al principio del
-fichero. `docker compose -f docker-compose.demo.yml down -v` lo borra todo.
+Abre **<http://localhost:8080>**. Los puertos 8081 a 8084 muestran las otras formas de usar Gresbase:
+con login, solo lectura, asistente y modo libre, descritas al principio del fichero.
+
+Para borrarlo todo: `docker compose -f docker-compose.demo.yml down -v`.
 
 ### Añádelo a tu proyecto
 
-Pon Gresbase junto a tu Postgres en tu `docker-compose.yml`:
+Pon Gresbase **junto a tu Postgres** en tu `docker-compose.yml`:
 
 ```yaml
 services:
@@ -124,55 +132,56 @@ volumes:
 docker compose up -d
 ```
 
-Abre <http://localhost:8080>. Sin `DATABASE_URL`, Gresbase arranca un asistente de configuración: el log
-trae un enlace con su token, y `docker compose exec gresbase /gresbase setup-token` imprime el token.
+Después abre <http://localhost:8080>. Cada [versión](https://github.com/amtzespinosa/gresbase/releases)
+incluye binarios para **Linux, macOS y Windows**.
+
+### Sin configuración: el asistente
+
+Sin `DATABASE_URL`, Gresbase **arranca un asistente de configuración**. El log trae un enlace con su
+token, o imprime el token con:
+
+```bash
+docker compose exec gresbase /gresbase setup-token
+```
+
 La [guía de inicio rápido](https://gresbase.pages.dev/es/docs/quick-start/) cubre `docker run`, el
-asistente y cómo conectar con una base fuera de Docker. Cada
-[versión](https://github.com/amtzespinosa/gresbase/releases) incluye binarios para Linux, macOS y Windows.
+asistente y **bases de datos fuera de Docker**.
+
+<div align="right"><a href="#readme">↑ Volver arriba</a></div>
 
 ## Capturas
 
 <table>
   <tr>
     <td width="50%">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/tables-desktop-dark.png">
-        <img src="docs/screenshots/tables-desktop-light.png" alt="Tablas: el grid con la lista de tablas">
-      </picture>
-      <p align="center"><sub>Tablas</sub></p>
+      <img src="docs/screenshots/tables-desktop-light.png" alt="Tablas, tema claro">
+      <p align="center"><sub>Tablas · claro</sub></p>
     </td>
     <td width="50%">
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/sql-desktop-dark.png">
-        <img src="docs/screenshots/sql-desktop-light.png" alt="Editor SQL con resultados">
-      </picture>
-      <p align="center"><sub>Editor SQL</sub></p>
+      <img src="docs/screenshots/sql-desktop-dark.png" alt="Editor SQL con resultados, tema oscuro">
+      <p align="center"><sub>Editor SQL · oscuro</sub></p>
     </td>
   </tr>
   <tr>
-    <td>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/structure-desktop-dark.png">
-        <img src="docs/screenshots/structure-desktop-light.png" alt="Estructura: columnas, índices y restricciones">
-      </picture>
-      <p align="center"><sub>Estructura</sub></p>
+    <td width="50%">
+      <img src="docs/screenshots/structure-desktop-dark.png" alt="Estructura: columnas, índices y restricciones, tema oscuro">
+      <p align="center"><sub>Estructura · oscuro</sub></p>
     </td>
-    <td>
-      <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="docs/screenshots/setup-desktop-dark.png">
-        <img src="docs/screenshots/setup-desktop-light.png" alt="Asistente de configuración, primer paso">
-      </picture>
-      <p align="center"><sub>Asistente</sub></p>
+    <td width="50%">
+      <img src="docs/screenshots/setup-desktop-light.png" alt="Asistente de configuración, primer paso, tema claro">
+      <p align="center"><sub>Asistente · claro</sub></p>
     </td>
   </tr>
 </table>
 
-Más pantallas, en escritorio y tableta, en [`docs/screenshots/`](docs/screenshots/). La interfaz de las
-capturas está en inglés; la app también está en español.
+Más pantallas, en escritorio y tableta, en [`docs/screenshots/`](docs/screenshots/). Las capturas
+están en inglés; **la app también está en español**.
+
+<div align="right"><a href="#readme">↑ Volver arriba</a></div>
 
 ## Comparativa
 
-Cada herramienta de esta tabla es buena en algo. Así se diferencian para lo que hace Gresbase: una
+Cada herramienta de esta tabla es buena en algo. Así se diferencian **para lo que hace Gresbase**: una
 interfaz web junto a tu propio Postgres.
 
 | | Gresbase | Adminer | pgAdmin | Supabase Studio | DbGate |
@@ -186,12 +195,16 @@ interfaz web junto a tu propio Postgres.
 | Administración del servidor (roles, copias, monitorización) | Aún no | Parcial | Sí | Funciones de la plataforma | Parcial |
 | Licencia | Apache-2.0 | Apache-2.0 o GPL-2.0 | PostgreSQL | Apache-2.0 | GPL-3.0 |
 
-Elige pgAdmin para administrar el servidor a fondo, Adminer o DbGate si trabajas con varios motores de
-bases de datos, y Supabase Studio si usas Supabase.
+Elige **pgAdmin** para administrar el servidor a fondo, **Adminer o DbGate** si trabajas con varios
+motores de bases de datos, y **Supabase Studio** si usas Supabase.
+
+<div align="right"><a href="#readme">↑ Volver arriba</a></div>
 
 ## Configuración
 
-Todos los ajustes son opcionales. Los que más vas a usar:
+**Todos los ajustes son opcionales.** Usa variables de entorno o cámbialos desde la app.
+
+### Variables principales
 
 | Variable | Qué hace |
 | --- | --- |
@@ -206,25 +219,32 @@ Todos los ajustes son opcionales. Los que más vas a usar:
 | `GRESBASE_STATEMENT_TIMEOUT` | Límite de tiempo por consulta (`30s` por defecto). |
 | `GRESBASE_DATA_DIR` | Ajustes y consultas guardadas (`/data`); monta un volumen ahí. |
 
-Los ajustes cambiados desde la app se guardan en `gresbase.json`, y una variable de entorno siempre
-manda sobre él. Todas las variables, puertos y límites están en la
+### Fichero de ajustes
+
+Los ajustes cambiados desde la app se guardan en `gresbase.json`, y **una variable de entorno siempre
+manda** sobre él. Los secretos de ese fichero van cifrados.
+
+Todas las variables, puertos y límites están en la
 [referencia de configuración](https://gresbase.pages.dev/es/docs/configuration-reference/).
+
+<div align="right"><a href="#readme">↑ Volver arriba</a></div>
 
 ## Seguridad
 
-- Sin cuenta, Gresbase solo responde a peticiones para `localhost`, contra la exposición accidental y el
-  DNS rebinding.
-- Las contraseñas se guardan como hash argon2id, los secretos de `gresbase.json` van cifrados y los logs
-  nunca llevan credenciales.
-- Las sesiones usan cookies `SameSite=Strict` y una cabecera contra CSRF; los intentos fallidos de
-  inicio de sesión están limitados.
-- El modo solo lectura se aplica dos veces: en la sesión de la base y en la API.
-- Cada consulta tiene un timeout. Las consultas largas siguen vivas detrás de Nginx o Cloudflare sin subir
-  ningún timeout del proxy.
-- El límite real es el rol de Postgres con el que conectas: dale solo los privilegios que quieras.
+- Sin cuenta, Gresbase **solo responde a peticiones para `localhost`**, contra la exposición accidental
+  y el DNS rebinding.
+- Las contraseñas se guardan como **hash argon2id**, los secretos de `gresbase.json` van cifrados y los
+  logs nunca llevan credenciales.
+- Las sesiones usan cookies `SameSite=Strict` y una cabecera contra CSRF; **los intentos fallidos están
+  limitados**.
+- El modo solo lectura se aplica **dos veces**: en la sesión de la base y en la API.
+- Cada consulta tiene un timeout, y las consultas largas **siguen vivas detrás de Nginx o Cloudflare**.
+- El límite real es **el rol de Postgres con el que conectas**: dale solo los privilegios que quieras.
 
 Proxies inversos, HTTPS y el token de configuración están en
 [Seguridad y red](https://gresbase.pages.dev/es/docs/security/).
+
+<div align="right"><a href="#readme">↑ Volver arriba</a></div>
 
 ## Compatibilidad
 
@@ -235,8 +255,10 @@ Proxies inversos, HTTPS y el token de configuración están en
 | 12, 13 | Heredado: probado en cada cambio; algunas funciones dependen de la versión y la interfaz lo dice |
 | 11 y anteriores | Sin soporte; Gresbase lo explica al conectar |
 
-La imagen funciona en `linux/amd64` y `linux/arm64`. El detalle por versión está en
+La imagen funciona en **`linux/amd64` y `linux/arm64`**. El detalle por versión está en
 [`docs/compatibility.md`](docs/compatibility.md).
+
+<div align="right"><a href="#readme">↑ Volver arriba</a></div>
 
 ## Hoja de ruta
 
@@ -247,21 +269,30 @@ La imagen funciona en `linux/amd64` y `linux/arm64`. El detalle por versión est
 
 El plan completo está en [`docs/spec.md`](docs/spec.md).
 
+<div align="right"><a href="#readme">↑ Volver arriba</a></div>
+
 ## Contribuir
 
-Las issues y pull requests son bienvenidas. Empieza por [`CONTRIBUTING.md`](CONTRIBUTING.md); el stack,
-las reglas de seguridad y las convenciones están en [`AGENTS.md`](AGENTS.md), tanto para personas como
-para agentes de código. Solo necesitas Docker y git: todas las herramientas van en el contenedor de
-desarrollo.
+**Las issues y pull requests son bienvenidas.** Empieza por [`CONTRIBUTING.md`](CONTRIBUTING.md); el
+stack, las reglas de seguridad y las convenciones están en [`AGENTS.md`](AGENTS.md), tanto para
+personas como para agentes de código.
+
+**Solo necesitas Docker y git:** todas las herramientas van en el contenedor de desarrollo.
 
 ```bash
 docker compose -f dev.compose.yml up -d --build
 docker compose -f dev.compose.yml exec workspace bash -lc "task dev"
 ```
 
+<div align="right"><a href="#readme">↑ Volver arriba</a></div>
+
 ## Licencia
 
-Gresbase se distribuye bajo la [Apache License 2.0](LICENSE). Copyright 2026 Alex M. Espinosa; consulta
-[`NOTICE`](NOTICE). El nombre Gresbase y el logo del mamut no entran en la licencia: los forks usan otro
-nombre y otro logo, como explica [`TRADEMARKS.md`](TRADEMARKS.md). Las licencias de terceros están en
+Gresbase se distribuye bajo la **[Apache License 2.0](LICENSE)**. Copyright 2026 Alex M. Espinosa;
+consulta [`NOTICE`](NOTICE).
+
+El **nombre Gresbase y el logo del mamut** no entran en la licencia: los forks usan otro nombre y otro
+logo, como explica [`TRADEMARKS.md`](TRADEMARKS.md). Las licencias de terceros están en
 [`docs/third-party-licenses.md`](docs/third-party-licenses.md).
+
+<div align="right"><a href="#readme">↑ Volver arriba</a></div>
