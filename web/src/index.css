@@ -1,0 +1,149 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+
+/* Tokens from docs/design.md. data-theme on <html> is always "light" or "dark" (public/theme.js
+   resolves "system"). */
+:root {
+  --bg: #f4f3f0;
+  --surface: #ffffff;
+  --surface-2: #f7f6f3;
+  --border: #e6e3dd;
+  --text: #1c1a17;
+  --muted: #6b665e;
+  --accent: #ffc929;
+  --on-accent: #17130c;
+  --accent-ink: #806515;
+  --accent-tint: #ffc92933;
+  /* Selected grid row: light gray; text on it is darker so it keeps 4.5:1 (docs/design.md). */
+  --row-selected: #ebe8e2;
+  --row-selected-edited: #ecd38c;
+  --row-selected-muted: #57524b;
+  --row-selected-ink: #6b5410;
+  --success: #22a06b;
+  --danger: #c2410c;
+  /* White on the dark-theme orange is 2.8:1, so dark text there (docs/decisions.md). */
+  --on-danger: #ffffff;
+  --pill: #1c1a17;
+  --on-pill: #f4f3f0;
+  --syntax-string: #0f766e;
+  --syntax-number: #1d4ed8;
+  --syntax-function: #a21caf;
+  --syntax-comment: var(--muted);
+  --shadow-card: 0 1px 2px rgba(28, 26, 23, 0.04), 0 8px 24px rgba(28, 26, 23, 0.05);
+  /* Label colors of saved connections (docs/design.md). */
+  --label-gray: #8a857c;
+  --label-red: #dc2626;
+  --label-orange: #ea580c;
+  --label-green: #16a34a;
+  --label-blue: #2563eb;
+  --label-purple: #9333ea;
+  --logo-glow: none;
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #0b0b0a;
+  --surface: #161615;
+  --surface-2: #1c1c1a;
+  --border: #2a2926;
+  --text: #edebe6;
+  --muted: #aeaaa1;
+  --accent-ink: #ffc929;
+  --accent-tint: #ffc9292e;
+  --row-selected: #2c2b28;
+  --row-selected-edited: #61542e;
+  --row-selected-muted: #d6d2c9;
+  --row-selected-ink: #ffe08a;
+  --danger: #f97316;
+  --on-danger: #17130c;
+  --pill: #edebe6;
+  --on-pill: #17130c;
+  --syntax-string: #6ee7c8;
+  --syntax-number: #93c5fd;
+  --syntax-function: #f0abfc;
+  --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --label-gray: #8a857c;
+  --label-red: #f87171;
+  --label-orange: #fb923c;
+  --label-green: #4ade80;
+  --label-blue: #60a5fa;
+  --label-purple: #c084fc;
+  --logo-glow: 0 0 18px #ffc92966;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-tint: var(--accent-tint);
+  --color-row-selected: var(--row-selected);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --color-on-danger: var(--on-danger);
+  --color-pill: var(--pill);
+  --color-on-pill: var(--on-pill);
+  --shadow-card: var(--shadow-card);
+  --shadow-glow: var(--logo-glow);
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+  --radius-card: 16px;
+  --radius-control: 9px;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+@utility section-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+/* Inside a selected row, edited cells get an opaque yellow that reads on the gray, and muted and
+   accent text get the darker (lighter in dark) variants that keep 4.5:1 there. */
+[data-row-selected] {
+  --accent-tint: var(--row-selected-edited);
+  --muted: var(--row-selected-muted);
+  --accent-ink: var(--row-selected-ink);
+}
+
+/* The clear (×) button of search inputs: the native one is a faint gray with an arrow cursor. Drawn
+   as a mask so it takes --text in both themes. */
+input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  background-color: var(--text);
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}

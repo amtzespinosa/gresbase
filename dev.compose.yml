@@ -1,0 +1,52 @@
+# Isolated development environment: every toolchain runs here, you only need Docker and git.
+#   docker compose -f dev.compose.yml up -d --build
+#   docker compose -f dev.compose.yml exec -T workspace bash -lc "<command>"
+# Use git from your machine; the container has no credentials. See AGENTS.md.
+name: gresbase-workspace
+
+services:
+  workspace:
+    build:
+      context: docker/dev
+      args:
+        USER_UID: ${HOST_UID:-1000}
+        USER_GID: ${HOST_GID:-1000}
+    depends_on:
+      - docker
+    volumes:
+      - .:/workspace
+      - go-cache:/home/dev/go/pkg
+      - go-build:/home/dev/.cache/go-build
+      # Outside the bind mount: pnpm symlinks and speed
+      - web-node-modules:/workspace/web/node_modules
+      - pnpm-store:/home/dev/.pnpm
+      - playwright:/ms-playwright
+    environment:
+      DOCKER_HOST: tcp://docker:2375
+      TESTCONTAINERS_HOST_OVERRIDE: docker
+      DEV_DATABASE_URL: postgres://gresbase:gresbase@docker:54329/app?sslmode=disable
+      GRESBASE_DEV_HOST: 0.0.0.0
+    ports:
+      - "127.0.0.1:${GRESBASE_HOST_PORT:-18080}:8080"   # Gresbase
+      - "127.0.0.1:${VITE_HOST_PORT:-15173}:5173"     # Vite
+      - "127.0.0.1:${SITE_HOST_PORT:-4321}:4321"      # Web (site/)
+    working_dir: /workspace
+
+  # Its own Docker daemon: tests and the development database never touch your machine's Docker.
+  docker:
+    image: docker:dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    command: ["--host=tcp://0.0.0.0:2375", "--host=unix:///var/run/docker.sock"]
+    volumes:
+      - .:/workspace          # same path as in workspace, so bind mounts work the same
+      - dind-data:/var/lib/docker
+
+volumes:
+  go-cache:
+  go-build:
+  web-node-modules:
+  pnpm-store:
+  playwright:
+  dind-data:

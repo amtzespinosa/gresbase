@@ -1,0 +1,134 @@
+/* Design tokens: docs/design.md plus the landing values of site/reference/landing-referencia.html.
+   The only file of the site with literal colors and shadows.
+   - data-theme="light"|"dark" on <html> is the saved choice; without one the system preference rules
+     (the media query below), so the page also follows it without JavaScript.
+   - .t-light / .t-dark force a theme on a subtree (the landing's opposite-theme screenshot).
+   The dark values are written twice (data-theme and media query): keep both blocks in sync. */
+
+:root, .t-light {
+  --bg: #F4F3F0;
+  --surface: #FFFFFF;
+  --surface-2: #F7F6F3;
+  --border: #E6E3DD;
+  --text: #1C1A17;
+  --muted: #6B665E;
+  --accent: #FFC929;
+  --on-accent: #17130C;
+  --accent-ink: #806515;
+  --accent-tint: #FFC92933;
+  --row-selected: #EBE8E2;
+  --row-selected-edited: #ECD38C;
+  --row-selected-muted: #57524B;
+  --row-selected-ink: #6B5410;
+  --success: #22A06B;
+  --danger: #C2410C;
+  --pill: #1C1A17;
+  --on-pill: #F4F3F0;
+  --syntax-string: #0F766E;
+  --syntax-number: #1D4ED8;
+  --syntax-function: #A21CAF;
+  --syntax-comment: var(--muted);
+  --label-gray: #8A857C;
+  --label-red: #DC2626;
+  --label-orange: #EA580C;
+  --label-green: #16A34A;
+  --label-blue: #2563EB;
+  --label-purple: #9333EA;
+
+  --shadow-card: 0 1px 2px rgba(28,26,23,.04), 0 8px 24px rgba(28,26,23,.05);
+  --shadow-shot: 0 1px 2px rgba(28,26,23,.04), 0 28px 72px rgba(28,26,23,.12);
+  --shadow-app-icon: 0 1px 2px rgba(28,26,23,.08), 0 14px 36px rgba(191,140,0,.30);
+  --shadow-seg: 0 1px 2px rgba(28,26,23,.10);
+  --shadow-pill: 0 10px 30px rgba(0,0,0,.18);
+  --shadow-pop: 0 2px 6px rgba(28,26,23,.06), 0 24px 64px rgba(28,26,23,.18);
+  --backdrop: rgba(28,26,23,.32);
+  --logo-glow: none;
+  --dot-off: #CFCAC1;
+  --sil-gray: .065;
+  --sil-yellow: .4;
+
+  --font-sans: Geist, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  color-scheme: light;
+}
+
+[data-theme="dark"], .t-dark {
+  --bg: #0B0B0A;
+  --surface: #161615;
+  --surface-2: #1C1C1A;
+  --border: #2A2926;
+  --text: #EDEBE6;
+  --muted: #AEAAA1;
+  --accent-ink: #FFC929;
+  --accent-tint: #FFC9292E;
+  --row-selected: #2C2B28;
+  --row-selected-edited: #61542E;
+  --row-selected-muted: #D6D2C9;
+  --row-selected-ink: #FFE08A;
+  --danger: #F97316;
+  --pill: #EDEBE6;
+  --on-pill: #17130C;
+  --syntax-string: #6EE7C8;
+  --syntax-number: #93C5FD;
+  --syntax-function: #F0ABFC;
+  --label-red: #F87171;
+  --label-orange: #FB923C;
+  --label-green: #4ADE80;
+  --label-blue: #60A5FA;
+  --label-purple: #C084FC;
+
+  --shadow-card: inset 0 1px 0 rgba(255,255,255,.03), 0 8px 24px rgba(0,0,0,.35);
+  --shadow-shot: inset 0 1px 0 rgba(255,255,255,.03), 0 28px 72px rgba(0,0,0,.55);
+  --shadow-app-icon: 0 0 18px #FFC92966, 0 0 56px #FFC92933;
+  --shadow-seg: 0 1px 2px rgba(0,0,0,.45);
+  --shadow-pop: inset 0 1px 0 rgba(255,255,255,.04), 0 24px 64px rgba(0,0,0,.6);
+  --backdrop: rgba(0,0,0,.55);
+  --logo-glow: 0 0 18px #FFC92966;
+  --dot-off: #3A3935;
+  --sil-gray: .08;
+  --sil-yellow: .2;
+
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0B0B0A;
+    --surface: #161615;
+    --surface-2: #1C1C1A;
+    --border: #2A2926;
+    --text: #EDEBE6;
+    --muted: #AEAAA1;
+    --accent-ink: #FFC929;
+    --accent-tint: #FFC9292E;
+    --row-selected: #2C2B28;
+    --row-selected-edited: #61542E;
+    --row-selected-muted: #D6D2C9;
+    --row-selected-ink: #FFE08A;
+    --danger: #F97316;
+    --pill: #EDEBE6;
+    --on-pill: #17130C;
+    --syntax-string: #6EE7C8;
+    --syntax-number: #93C5FD;
+    --syntax-function: #F0ABFC;
+    --label-red: #F87171;
+    --label-orange: #FB923C;
+    --label-green: #4ADE80;
+    --label-blue: #60A5FA;
+    --label-purple: #C084FC;
+
+    --shadow-card: inset 0 1px 0 rgba(255,255,255,.03), 0 8px 24px rgba(0,0,0,.35);
+    --shadow-shot: inset 0 1px 0 rgba(255,255,255,.03), 0 28px 72px rgba(0,0,0,.55);
+    --shadow-app-icon: 0 0 18px #FFC92966, 0 0 56px #FFC92933;
+    --shadow-seg: 0 1px 2px rgba(0,0,0,.45);
+    --shadow-pop: inset 0 1px 0 rgba(255,255,255,.04), 0 24px 64px rgba(0,0,0,.6);
+    --backdrop: rgba(0,0,0,.55);
+    --logo-glow: 0 0 18px #FFC92966;
+    --dot-off: #3A3935;
+    --sil-gray: .08;
+    --sil-yellow: .2;
+
+    color-scheme: dark;
+  }
+}

@@ -1,0 +1,61 @@
+# Release pipeline, run by .github/workflows/release.yml on a v* tag in the public repository. Locally,
+# only `goreleaser release --snapshot --clean`, which publishes nothing.
+# Images go to ghcr.io/$IMAGE_OWNER/gresbase; release.yml sets IMAGE_OWNER to the repository owner
+# (locally: IMAGE_OWNER=OWNER goreleaser check).
+version: 2
+
+project_name: gresbase
+
+before:
+  hooks:
+    - sh -c "cd web && pnpm install --frozen-lockfile && pnpm build"
+
+builds:
+  - main: ./cmd/gresbase
+    binary: gresbase
+    env: [CGO_ENABLED=0]
+    flags: [-trimpath]
+    ldflags: ["-s -w -X main.version={{ .Version }}"]
+    goos: [linux, darwin, windows]
+    goarch: [amd64, arm64]
+
+archives:
+  - formats: [tar.gz]
+    files:
+      - LICENSE
+      - NOTICE
+      - TRADEMARKS.md
+      - README.md
+      - src: web/public/licenses/THIRD_PARTY_NOTICES.txt
+        strip_parent: true
+    format_overrides:
+      - goos: windows
+        formats: [zip]
+
+checksum:
+  name_template: checksums.txt
+
+dockers_v2:
+  - images: ["ghcr.io/{{ .Env.IMAGE_OWNER }}/gresbase"]
+    dockerfile: Dockerfile.release
+    extra_files: [LICENSE, NOTICE, TRADEMARKS.md, web/public/licenses/THIRD_PARTY_NOTICES.txt]
+    platforms: [linux/amd64, linux/arm64]
+    # 0.3.0, 0.3 and latest; from 1.0 also the major tag (1). site/content/*/upgrading.md explains them.
+    tags: ["{{ .Version }}", "{{ .Major }}.{{ .Minor }}", "{{ if .Major }}{{ .Major }}{{ end }}", "latest"]
+    labels:
+      org.opencontainers.image.title: gresbase
+      org.opencontainers.image.version: "{{ .Version }}"
+      org.opencontainers.image.revision: "{{ .FullCommit }}"
+      org.opencontainers.image.source: "{{ .GitURL }}"
+
+changelog:
+  use: git
+  sort: asc
+  groups:
+    - title: Features
+      regexp: '^feat'
+    - title: Fixes
+      regexp: '^fix'
+    - title: Other
+  filters:
+    exclude: ['^docs', '^test', '^chore', '^merge']

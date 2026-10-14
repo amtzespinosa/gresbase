@@ -1,0 +1,11 @@
+Gresbase
+Copyright 2026 Alex M. Espinosa
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product bundles third-party software under their own licenses (MIT, BSD, ISC, Apache-2.0,
+SIL Open Font License 1.1 for the Geist and Geist Mono fonts, and others). Their notices and full
+license texts are in THIRD_PARTY_NOTICES.txt, shipped with the binary, the container image and the
+release archives.
+
+The name "Gresbase" and the Gresbase logo are not licensed under the Apache License; see TRADEMARKS.md.

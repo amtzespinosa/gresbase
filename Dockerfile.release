@@ -1,0 +1,13 @@
+# Image built by GoReleaser from its prebuilt binaries (see .goreleaser.yaml). For local builds use
+# the multi-stage Dockerfile.
+FROM gcr.io/distroless/static-debian12:nonroot
+ARG TARGETPLATFORM
+COPY $TARGETPLATFORM/gresbase /gresbase
+COPY LICENSE NOTICE TRADEMARKS.md web/public/licenses/THIRD_PARTY_NOTICES.txt /licenses/
+# Empty directory owned by nonroot (uid 65532), so /data is writable without a volume
+COPY --from=gcr.io/distroless/static-debian12:nonroot --chown=65532:65532 /home/nonroot /data
+USER nonroot
+EXPOSE 8080
+VOLUME /data
+HEALTHCHECK --interval=10s --timeout=5s --start-period=40s --retries=3 CMD ["/gresbase", "healthcheck"]
+ENTRYPOINT ["/gresbase"]

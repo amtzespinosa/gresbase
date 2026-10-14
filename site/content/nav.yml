@@ -1,0 +1,46 @@
+# Sections and pages of the documentation, in order. Each page is content/<lang>/<slug>.md in every
+# language; the titles here are the sidebar entries and the pages' h1.
+- title: { en: Getting started, es: Empezar }
+  pages:
+    - { slug: introduction, en: Introduction, es: Introducción }
+    - { slug: quick-start, en: Quick start, es: Inicio rápido }
+    - { slug: docker-run, en: Running with docker run, es: Con docker run }
+    - { slug: setup-wizard, en: Setup wizard, es: Asistente de configuración }
+    - { slug: tour, en: A quick tour, es: Recorrido rápido }
+- title: { en: Configuration, es: Configuración }
+  pages:
+    - { slug: environment, en: Environment variables, es: Variables de entorno }
+    - { slug: connecting, en: Connecting to PostgreSQL, es: Conectar con PostgreSQL }
+    - { slug: connections, en: Saved connections, es: Conexiones guardadas }
+    - { slug: read-only, en: Read-only mode, es: Modo solo lectura }
+    - { slug: data-volume, en: The data volume, es: El volumen de datos }
+    - { slug: authentication, en: Sign-in and accounts, es: Inicio de sesión y cuentas }
+    - { slug: free-mode, en: Free mode, es: Modo libre }
+    - { slug: settings, en: Settings screen, es: Pantalla de ajustes }
+    - { slug: security, en: Security and networking, es: Seguridad y red }
+- title: { en: Using Gresbase, es: Usar Gresbase }
+  pages:
+    - { slug: tables, en: Browsing tables, es: Explorar tablas }
+    - { slug: editing-data, en: Editing data, es: Editar datos }
+    - { slug: filter-sort, en: Filtering and sorting, es: Filtrar y ordenar }
+    - { slug: import-export, en: Import and export, es: Importar y exportar }
+    - { slug: structure, en: Structure and relations, es: Estructura y relaciones }
+    - { slug: sql-editor, en: SQL editor, es: Editor SQL }
+    - { slug: command-palette, en: Command palette, es: Paleta de comandos }
+    - { slug: preferences, en: Language and theme, es: Idioma y tema }
+- title: { en: Operations, es: Operación }
+  pages:
+    - { slug: upgrading, en: Upgrading, es: Actualizar }
+    - { slug: backups, en: Backups, es: Copias de seguridad }
+    - { slug: troubleshooting, en: Troubleshooting, es: Solución de problemas }
+    - { slug: faq, en: FAQ, es: Preguntas frecuentes }
+- title: { en: Reference, es: Referencia }
+  pages:
+    - { slug: shortcuts, en: Keyboard shortcuts, es: Atajos de teclado }
+    - { slug: configuration-reference, en: Configuration reference, es: Referencia de configuración }
+- title: { en: Project, es: Proyecto }
+  pages:
+    - { slug: building, en: Building from source, es: Compilar desde el código }
+    - { slug: contributing, en: Contributing, es: Cómo contribuir }
+    - { slug: license, en: License, es: Licencia }
+    - { slug: changelog, en: Changelog, es: Cambios }

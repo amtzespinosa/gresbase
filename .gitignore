@@ -1,0 +1,28 @@
+# Build output
+/bin/
+/dist/
+internal/ui/dist/*
+!internal/ui/dist/.gitkeep
+coverage/
+
+# Dependencies (web/node_modules is a docker volume in the dev environment)
+node_modules/
+
+# Tooling
+.task/
+*.tsbuildinfo
+/test-results/
+/playwright-report/
+
+# Local env and data
+.env
+.env.*
+!.env.example
+/data/
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+/tmp/

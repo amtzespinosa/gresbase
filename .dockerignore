@@ -1,0 +1,15 @@
+.git
+.github
+.task
+bin
+dist
+data
+docs
+e2e
+**/node_modules
+internal/ui/dist
+coverage
+test-results
+playwright-report
+.env
+.env.*

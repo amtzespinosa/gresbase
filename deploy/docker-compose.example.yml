@@ -1,0 +1,35 @@
+# Gresbase next to your Postgres. Open http://localhost:8080
+# Without DATABASE_URL Gresbase opens the setup wizard (token: `docker compose logs gresbase | grep setup_token`).
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: app
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app"]
+      interval: 2s
+      retries: 30
+
+  gresbase:
+    image: ghcr.io/amtzespinosa/gresbase:0.3
+    ports:
+      - "127.0.0.1:8080:8080"   # localhost only: without an account there is no login
+    environment:
+      DATABASE_URL: postgres://app:app@db:5432/app?sslmode=disable
+      # GRESBASE_USER: admin
+      # GRESBASE_PASSWORD: change-me
+      # GRESBASE_READ_ONLY: "true"
+      # GRESBASE_SECRET_KEY: <32+ characters, e.g. from a Docker secret>  # encrypts secrets in gresbase.json
+    volumes:
+      - gresbase-data:/data      # settings, saved connections, saved queries
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
+  gresbase-data:

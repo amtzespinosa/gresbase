@@ -1,0 +1,27 @@
+{
+  "name": "gresbase-site",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node build/dev-server.mjs",
+    "build": "node build/build.mjs --prod",
+    "preview": "node build/dev-server.mjs --preview",
+    "check": "node build/check.mjs",
+    "screenshots": "node build/screenshots.mjs",
+    "audit": "node build/audit.mjs",
+    "compare": "node build/compare.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
+    "chrome-launcher": "^1.2.2",
+    "lighthouse": "^13.5.0",
+    "markdown-it": "^15.0.2",
+    "yaml": "^2.9.1"
+  },
+  "optionalDependencies": {
+    "playwright": "1.64.0"
+  }
+}

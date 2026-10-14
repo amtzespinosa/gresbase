@@ -1,0 +1,66 @@
+# tygo: TypeScript types for the API from the Go wire structs. `task gen` runs it and concatenates
+# the per-package outputs (tygo writes one file per package) into web/src/lib/api/types.gen.ts.
+packages:
+  - path: github.com/amtzespinosa/gresbase/internal/server
+    output_path: tmp/tygo/1-server.ts
+    include_files: [wire.go]
+    frontmatter: |
+      /** Label color of a saved connection (config.LabelColors, tokens --label-*). */
+      export type LabelColor = "gray" | "red" | "orange" | "green" | "blue" | "purple";
+  - path: github.com/amtzespinosa/gresbase/internal/auth
+    output_path: tmp/tygo/2-auth.ts
+    include_files: [wire.go]
+    optional_type: "null"
+    type_mappings:
+      time.Time: "string /* RFC 3339 */"
+  - path: github.com/amtzespinosa/gresbase/internal/pg
+    output_path: tmp/tygo/3-pg.ts
+    include_files: [info.go]
+    type_mappings:
+      capabilities.Level: "SupportLevel"
+      capabilities.Set: "Record<string, Capability>"
+    frontmatter: |
+      /** How well Gresbase supports the server version (internal/pg/capabilities). */
+      export type SupportLevel = "full" | "legacy" | "prerelease" | "unsupported";
+      /** One capability: available, or the version (server_version_num) or extension it needs. */
+      export interface Capability { available: boolean; min_version?: number; extension?: string }
+  - path: github.com/amtzespinosa/gresbase/internal/pg/introspect
+    output_path: tmp/tygo/4-introspect.ts
+    include_files: [types.go]
+    optional_type: "null"
+  - path: github.com/amtzespinosa/gresbase/internal/pg/rows
+    output_path: tmp/tygo/5-rows.ts
+    include_files: [types.go]
+    optional_type: "null"
+    frontmatter: |
+      /** A bytea value: its size and first bytes, never the content. */
+      export type ByteaCell = { $bytea: { size: number; hex_preview: string } };
+      /** A text value longer than 10 KB: its first bytes; fetch the full value with rows/value. */
+      export type TruncatedCell = { $text: string; truncated: true; size: number };
+      /** One cell (see the value encoding in AGENTS.md). json/jsonb columns hold any JSON value. */
+      export type Cell = null | boolean | number | string | Cell[] | ByteaCell | TruncatedCell | { [key: string]: unknown };
+      export type FilterOp = 'eq' | 'neq' | 'lt' | 'lte' | 'gt' | 'gte' | 'contains' | 'starts_with' | 'is_null' | 'not_null' | 'in' | 'between' | 'json_contains';
+  - path: github.com/amtzespinosa/gresbase/internal/pg/write
+    output_path: tmp/tygo/6-write.ts
+    include_files: [types.go]
+    frontmatter: |
+      /** Column name → value in the wire encoding. */
+      export type CellMap = Record<string, Cell>;
+      /** A change to the structure of a table (StructureChange.kind). */
+      export type StructureKind = "create_table" | "rename_table" | "set_table_comment" | "set_table_schema" | "add_column" | "rename_column" | "alter_column_type" | "set_not_null" | "set_default" | "drop_column" | "create_index" | "drop_index" | "add_unique" | "add_check" | "add_foreign_key" | "validate_constraint" | "drop_constraint";
+  - path: github.com/amtzespinosa/gresbase/internal/pg/sqlguard
+    output_path: tmp/tygo/7-sqlguard.ts
+    include_files: [guard.go]
+  - path: github.com/amtzespinosa/gresbase/internal/pg/sqlexec
+    output_path: tmp/tygo/8-sqlexec.ts
+    include_files: [types.go]
+    type_mappings:
+      time.Time: "string /* RFC 3339 */"
+  - path: github.com/amtzespinosa/gresbase/internal/snippets
+    output_path: tmp/tygo/9-snippets.ts
+    include_files: [wire.go]
+    type_mappings:
+      time.Time: "string /* RFC 3339 */"
+  - path: github.com/amtzespinosa/gresbase/internal/config
+    output_path: tmp/tygo/a-config.ts
+    include_files: [wire.go]

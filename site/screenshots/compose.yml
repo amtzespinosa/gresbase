@@ -1,0 +1,31 @@
+# Gresbase with a demo database, only for `npm run screenshots` (which starts and stops it).
+# Uses the local image (`task image:local` builds gresbase:local) and invented data from seed.sql.
+# Run it from the dev container: its Docker is the internal one where gresbase:local lives.
+name: gresbase-screenshots
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: shop
+      POSTGRES_PASSWORD: shop
+      POSTGRES_DB: shop
+    volumes:
+      - ./seed.sql:/docker-entrypoint-initdb.d/seed.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shop -d shop"]
+      interval: 2s
+      retries: 30
+
+  gresbase:
+    image: gresbase:local
+    environment:
+      DATABASE_URL: postgres://shop:shop@db:5432/shop?sslmode=disable
+      # The browser reaches it through the Docker host's name (`docker` inside the dev container).
+      GRESBASE_ALLOWED_HOSTS: ${SCREENSHOTS_HOST:-localhost}
+      GRESBASE_LANG: en
+    ports:
+      - "${SCREENSHOTS_PORT:-18190}:8080"
+    depends_on:
+      db:
+        condition: service_healthy

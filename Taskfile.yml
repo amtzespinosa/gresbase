@@ -1,0 +1,182 @@
+version: "3"
+
+vars:
+  DEV_DATABASE_URL: '{{.DEV_DATABASE_URL | default "postgres://gresbase:gresbase@localhost:54329/app?sslmode=disable"}}'
+  GRESBASE_DEV_HOST: '{{.GRESBASE_DEV_HOST | default "127.0.0.1"}}'
+  # A tag when there is one (v0.4.0-3-gabc1234); until then dev+<short commit>[-dirty], so usage notes
+  # can say which build they are about.
+  VERSION:
+    sh: git describe --tags --dirty 2>/dev/null || echo "dev+$(git describe --always --dirty 2>/dev/null || echo unknown)"
+  DEV_DB_COMPOSE: docker compose -f deploy/docker-compose.dev.yml
+
+env:
+  DEV_DATABASE_URL: "{{.DEV_DATABASE_URL}}"
+  GRESBASE_DEV_HOST: "{{.GRESBASE_DEV_HOST}}"
+  CGO_ENABLED: "0"
+
+tasks:
+  default:
+    cmds:
+      - task --list
+
+  web:deps:
+    internal: true
+    dir: web
+    sources: [package.json, pnpm-lock.yaml, pnpm-workspace.yaml]
+    cmds:
+      - pnpm install --frozen-lockfile
+
+  dev:
+    desc: Development Postgres + backend with reload + Vite
+    cmds:
+      - task: dev:db
+      - task: dev:servers
+
+  dev:servers:
+    internal: true
+    deps: [dev:api, dev:web]
+
+  dev:api:
+    internal: true
+    env:
+      DATABASE_URL: "{{.DEV_DATABASE_URL}}"
+      GRESBASE_DATA_DIR: "{{.ROOT_DIR}}/data"
+    cmds:
+      - mkdir -p data
+      - ./scripts/dev-api.sh
+
+  dev:web:
+    internal: true
+    deps: [web:deps]
+    dir: web
+    cmds:
+      - pnpm dev
+
+  dev:db:
+    desc: Development Postgres with sample data (deploy/docker-compose.dev.yml)
+    cmds:
+      - "{{.DEV_DB_COMPOSE}} up -d --wait"
+      - echo "Postgres ready at $DEV_DATABASE_URL"
+
+  dev:db:reset:
+    desc: Recreate the development database from deploy/seed
+    cmds:
+      - "{{.DEV_DB_COMPOSE}} down -v"
+      - task: dev:db
+
+  build:
+    desc: Build the frontend and the binary with the frontend embedded
+    deps: [web:build]
+    cmds:
+      - go build -trimpath -ldflags "-s -w -X main.version={{.VERSION}}" -o bin/gresbase ./cmd/gresbase
+
+  web:build:
+    internal: true
+    deps: [web:deps]
+    dir: web
+    cmds:
+      - pnpm build
+
+  test:
+    desc: Go and web tests
+    cmds:
+      - task: test:go
+      - task: test:web
+
+  test:go:
+    desc: Go tests (integration tests need Docker; PG_VERSION picks the postgres image tag, default 17)
+    cmds:
+      - go test ./...
+
+  test:go:all:
+    desc: Go tests against every supported Postgres (12-19), one version after another, with a summary
+    vars:
+      # Keep in sync with GO_MATRIX in scripts/ci.sh and .github/workflows/ci.yml. 19beta4 becomes 19 at release.
+      PG_VERSIONS: 12 13 14 15 16 17 18 19beta4
+    cmds:
+      - |
+        failed=""
+        for v in {{.PG_VERSIONS}}; do
+          echo "=== PG_VERSION=$v"
+          PG_VERSION=$v go test -count=1 ./... || failed="$failed $v"
+        done
+        if [ -n "$failed" ]; then echo "FAILED on:$failed"; exit 1; fi
+        echo "All versions passed"
+
+  test:web:
+    desc: Vitest
+    deps: [web:deps]
+    dir: web
+    cmds:
+      - pnpm test
+
+  e2e:
+    desc: Playwright against the compiled binary and a freshly reset development database
+    deps: [web:deps]
+    cmds:
+      - task: dev:db:reset
+      - task: build
+      # Chromium for this Playwright version (a no-op once it is in the playwright volume)
+      - cd web && pnpm exec playwright install chromium
+      - cd web && pnpm exec playwright test {{.CLI_ARGS}}
+
+  ci:quick:
+    desc: "Local CI, gate for every merge: lint, generated types, Go on PG 18, Vitest, e2e on PG 18"
+    cmds:
+      - bash scripts/ci.sh quick
+
+  ci:full:
+    desc: "Local CI, gate for a block or round: ci:quick + Go 12-19, e2e 12/17/18, smoke 19, build, image, Docker smoke"
+    cmds:
+      - bash scripts/ci.sh full
+
+  image:local:
+    desc: Build the image gresbase:local (in the dev container's Docker), version with the commit
+    cmds:
+      - docker build -t gresbase:local --build-arg VERSION={{.VERSION}} .
+
+  image:export:
+    desc: Save gresbase:local to dist/gresbase-local.tar (then `docker load -i dist/gresbase-local.tar`)
+    deps: [image:local]
+    cmds:
+      - mkdir -p dist
+      - docker save gresbase:local -o dist/gresbase-local.tar
+      - ls -lh dist/gresbase-local.tar
+
+  lint:
+    desc: golangci-lint, eslint, prettier, tsc --noEmit, generated types check, actionlint
+    deps: [web:deps]
+    cmds:
+      - golangci-lint run ./...
+      - cd web && pnpm lint
+      - cd web && pnpm typecheck
+      - cd web && pnpm format:check
+      - task: gen:check
+      - node scripts/licenses.mjs --check
+      - actionlint
+
+  licenses:
+    desc: Regenerate docs/third-party-licenses.md and web/public/licenses/ (LICENSE, NOTICE, third-party notices)
+    deps: [web:deps]
+    cmds:
+      - node scripts/licenses.mjs
+
+  gen:
+    desc: Regenerate web/src/lib/api/types.gen.ts with tygo and deploy/docker-compose.demo.yml
+    cmds:
+      - task: gen:tygo
+      - cat tmp/tygo/*.ts > web/src/lib/api/types.gen.ts
+      - bash scripts/demo-compose.sh > deploy/docker-compose.demo.yml
+
+  gen:tygo:
+    internal: true
+    cmds:
+      - rm -rf tmp/tygo
+      - tygo generate
+
+  gen:check:
+    internal: true
+    cmds:
+      - task: gen:tygo
+      - 'cat tmp/tygo/*.ts | cmp -s - web/src/lib/api/types.gen.ts || (echo "types.gen.ts is stale, run task gen" >&2; exit 1)'
+      - 'bash scripts/demo-compose.sh | cmp -s - deploy/docker-compose.demo.yml || (echo "docker-compose.demo.yml is stale, run task gen" >&2; exit 1)'

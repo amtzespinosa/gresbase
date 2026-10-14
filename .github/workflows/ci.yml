@@ -1,0 +1,155 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+
+concurrency:
+  # event_name keeps a late pull_request run (ref = base branch once merged) from cancelling the push run
+  group: ci-${{ github.event_name }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: web/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: web
+      - uses: golangci/golangci-lint-action@v8
+        with:
+          version: v2.14
+      - name: Web lint
+        working-directory: web
+        run: |
+          pnpm lint
+          pnpm typecheck
+          pnpm format:check
+      - name: Generated types are up to date
+        run: |
+          go run github.com/gzuidhof/tygo@latest generate
+          cat tmp/tygo/*.ts | cmp - web/src/lib/api/types.gen.ts
+
+  test-go:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      # Keep in sync with PG_VERSIONS in Taskfile.yml (test:go:all). 19beta4 becomes "19" at release.
+      matrix:
+        pg: ["12", "13", "14", "15", "16", "17", "18"]
+        prerelease: [false]
+        include:
+          - pg: "19beta4"
+            prerelease: true
+    # A pre-release Postgres may fail on its own bugs: its failures do not fail the run.
+    continue-on-error: ${{ matrix.prerelease }}
+    env:
+      PG_VERSION: ${{ matrix.pg }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - run: go test ./...
+
+  test-web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: web/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+        working-directory: web
+      - run: pnpm test
+        working-directory: web
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [lint, test-go, test-web]
+    env:
+      CGO_ENABLED: "0"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: web/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile && pnpm build
+        working-directory: web
+      - run: go build -trimpath -ldflags "-s -w -X main.version=${GITHUB_SHA::7}" -o bin/gresbase ./cmd/gresbase
+      - run: ./bin/gresbase version
+
+  # Same steps as `task e2e`: fresh dev database, compiled binary, Playwright. Full suite on the oldest
+  # (12), default (17) and newest stable (18) Postgres; smoke on the pre-release. 19beta4 becomes "19".
+  e2e:
+    runs-on: ubuntu-latest
+    needs: [lint, test-web]
+    strategy:
+      fail-fast: false
+      matrix:
+        pg: ["12", "17", "18"]
+        prerelease: [false]
+        include:
+          - pg: "19beta4"
+            prerelease: true
+            specs: e2e/01 e2e/02 e2e/06
+    continue-on-error: ${{ matrix.prerelease }}
+    env:
+      CGO_ENABLED: "0"
+      PG_VERSION: ${{ matrix.pg }}
+      DEV_DATABASE_URL: postgres://gresbase:gresbase@localhost:54329/app?sslmode=disable
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: web/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: docker compose -f deploy/docker-compose.dev.yml up -d --wait
+      - run: pnpm install --frozen-lockfile && pnpm build
+        working-directory: web
+      - run: go build -trimpath -o bin/gresbase ./cmd/gresbase
+      - run: pnpm exec playwright install --with-deps chromium
+        working-directory: web
+      - run: pnpm exec playwright test ${{ matrix.specs }}
+        working-directory: web
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: e2e-report-pg${{ matrix.pg }}
+          path: tmp/e2e/
+          retention-days: 7

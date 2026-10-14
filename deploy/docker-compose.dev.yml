@@ -1,0 +1,27 @@
+# Development database with sample data. Started by `task dev:db`.
+# Reset with `task dev:db:reset` (the seed only runs on an empty volume).
+# PG_VERSION picks the image (12-19, default 17); switching versions needs a reset.
+name: gresbase-devdb
+
+services:
+  postgres:
+    image: postgres:${PG_VERSION:-17}
+    environment:
+      POSTGRES_USER: gresbase
+      POSTGRES_PASSWORD: gresbase
+      POSTGRES_DB: app
+      # The image's default PGDATA moved in 18 and 18+ refuses a mount at the old path: one path for all.
+      PGDATA: /var/lib/postgresql/gresbase
+    ports:
+      - "54329:5432"
+    volumes:
+      - ./seed:/docker-entrypoint-initdb.d:ro
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U gresbase -d app"]
+      interval: 2s
+      timeout: 3s
+      retries: 60
+
+volumes:
+  pgdata:

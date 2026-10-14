@@ -1,0 +1,23 @@
+# Web de Gresbase en local, sin instalar Node. Desde la raíz del repo:
+#   docker compose -f site/compose.yml up        → http://localhost:4321 (con recarga)
+#   docker compose -f site/compose.yml run --rm site npm run build
+# Monta el repo entero: el build lee assets/brand/ y, más adelante, el código (variables, atajos, git log).
+name: gresbase-site
+
+services:
+  site:
+    image: node:22-bookworm
+    working_dir: /repo/site
+    command: bash -c "npm ci --no-audit --no-fund && npm run dev"
+    environment:
+      GRESBASE_DEV_HOST: 0.0.0.0
+      NPM_CONFIG_UPDATE_NOTIFIER: "false"
+    ports:
+      - "127.0.0.1:${SITE_HOST_PORT:-4321}:4321"
+    volumes:
+      - ..:/repo
+      # Fuera del bind mount de Windows: más rápido y sin mezclar binarios con el anfitrión.
+      - node-modules:/repo/site/node_modules
+
+volumes:
+  node-modules:
