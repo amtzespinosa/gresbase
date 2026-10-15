@@ -65,34 +65,42 @@ shows its SQL, and can be undone even after you save it.
 
 <table>
   <tr>
+    <td width="50%"><b>Search all tables</b><br><b>A value in every table at once</b>, with results arriving live, table by table, plus the names of tables, views and columns.</td>
     <td width="50%"><b>Fast tables</b><br>Virtualized grid, <b>keyset pagination</b>, filters and multi-column sort kept in the URL.</td>
+  </tr>
+  <tr>
     <td width="50%"><b>Change queue</b><br>Edits wait with a diff and their SQL, then save in <b>one transaction</b>.</td>
+    <td width="50%"><b>Undo and redo</b><br><b>Even after saving</b>, through inverse operations that check for conflicts.</td>
   </tr>
   <tr>
-    <td><b>Undo and redo</b><br><b>Even after saving</b>, through inverse operations that check for conflicts.</td>
-    <td><b>Structure editing</b><br>Tables, columns, indexes, constraints and foreign keys, previewing <b>the exact DDL</b>.</td>
+    <td width="50%"><b>Structure editing</b><br>Tables, columns, indexes, constraints and foreign keys, previewing <b>the exact DDL</b>.</td>
+    <td width="50%"><b>SQL editor</b><br><b>Autocomplete</b>, tabs, <code>:name</code> parameters, transaction mode, history and saved queries.</td>
   </tr>
   <tr>
-    <td><b>SQL editor</b><br><b>Autocomplete</b>, tabs, <code>:name</code> parameters, transaction mode, history and saved queries.</td>
-    <td><b>Spreadsheet friendly</b><br>Copy a rectangle as TSV, CSV, JSON or <code>INSERT</code>; <b>paste into the queue</b>.</td>
+    <td width="50%"><b>Spreadsheet friendly</b><br>Copy a rectangle as TSV, CSV, JSON or <code>INSERT</code>; <b>paste into the queue</b>.</td>
+    <td width="50%"><b>Many connections</b><br>Saved connections with color labels; <b>each browser tab</b> can use a different one.</td>
   </tr>
   <tr>
-    <td><b>Many connections</b><br>Saved connections with color labels; <b>each browser tab</b> can use a different one.</td>
-    <td><b>Free mode</b><br>Sign in with <b>any Postgres user</b>, like Adminer, limited to the servers you allow.</td>
+    <td width="50%"><b>Free mode</b><br>Sign in with <b>any Postgres user</b>, like Adminer, limited to the servers you allow.</td>
+    <td width="50%"><b>Zero config</b><br>Environment variables or <b>a setup wizard</b>; settings in one file, secrets encrypted.</td>
   </tr>
   <tr>
-    <td><b>Zero config</b><br>Environment variables or <b>a setup wizard</b>; settings in one file, secrets encrypted.</td>
-    <td><b>Safe by default</b><br><b>Localhost only</b> without login, read-only mode, timeouts, CSRF and rate limits.</td>
+    <td width="50%"><b>Safe by default</b><br><b>Localhost only</b> without login, read-only mode, timeouts, CSRF and rate limits.</td>
+    <td width="50%"><b>Read-only and roles</b><br>Searches and screens respect <b>the Postgres role</b>: its privileges and row security.</td>
   </tr>
   <tr>
-    <td><b>Search all tables</b><br>A value in <b>every table</b> and names of tables and columns, streamed table by table.</td>
-    <td><b>Read-only and roles</b><br>Searches and screens respect <b>the Postgres role</b>: its privileges and row security.</td>
-  </tr>
-  <tr>
-    <td><b>Import and export</b><br>CSV into existing tables; exports that <b>stream from the first byte</b>.</td>
-    <td><b>Small and private</b><br>One image, works offline, <b>no telemetry</b>; English and Spanish, light and dark.</td>
+    <td width="50%"><b>Import and export</b><br>CSV into existing tables; exports that <b>stream from the first byte</b>.</td>
+    <td width="50%"><b>Small and private</b><br>One image, works offline, <b>no telemetry</b>; English and Spanish, light and dark.</td>
   </tr>
 </table>
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/search-dark.gif">
+    <img src=".github/assets/search-light.gif" width="760" alt="Global search: a term typed in the command palette, matching tables and columns, rows from several tables with the term highlighted, and a row opened filtered with its column highlighted">
+  </picture>
+  <br><sub><b>Search all tables:</b> type a term in <kbd>⌘</kbd> <kbd>K</kbd>, watch the results arrive and open a row.</sub>
+</p>
 
 <div align="right"><a href="#readme">↑ Back to top</a></div>
 
@@ -195,8 +203,13 @@ next to your own Postgres.
 | Edits wait until you save | Yes, with diff and SQL | No | Yes | No | Yes |
 | Undo after saving | Yes | No | No | No | No |
 | Structure editing | Yes | Yes | Yes | Yes | Yes |
+| Search across tables | Values and names, live, with the matching rows | Values: lists the tables that contain them | Object names | Table names | Object and column names |
 | Server administration (roles, backups, monitoring) | Not yet | Partial | Yes | Platform features | Partial |
 | License | Apache-2.0 | Apache-2.0 or GPL-2.0 | PostgreSQL | Apache-2.0 | GPL-3.0 |
+
+In the search row, Gresbase shows the rows that match, as each table answers, with a time and row limit
+per table and only what the role can read (privileges and row security). Adminer finds the tables that
+contain a value and opens each one filtered.
 
 Pick **pgAdmin** for deep server administration, **Adminer or DbGate** when you work with several
 database engines, and **Supabase Studio** if you run Supabase.

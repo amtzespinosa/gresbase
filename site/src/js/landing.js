@@ -16,11 +16,16 @@
   var dotLabels = JSON.parse(screens.dataset.dots);
   var caption = document.getElementById('caption');
   function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  var slides = document.querySelectorAll('.slide');
   function renderSlide(animateCaption) {
-    document.querySelectorAll('.slide').forEach(function (s, i) {
+    slides.forEach(function (s, i) {
       s.classList.toggle('on', i === state.slide);
       s.setAttribute('aria-hidden', String(i !== state.slide));
     });
+    /* La diapositiva del GIF dura lo que el GIF y lo empieza desde el principio */
+    var on = slides[state.slide];
+    screens.style.setProperty('--interval', on.dataset.interval || '6.5s');
+    on.querySelectorAll('img').forEach(function (img) { img.src = img.src; });
     if (animateCaption && !reduceMQ.matches) {
       caption.classList.add('fade');
       setTimeout(function () { caption.textContent = captions[state.slide]; caption.classList.remove('fade'); }, 350);
@@ -32,7 +37,7 @@
       return '<button type="button" class="dot" data-i="' + i + '" aria-label="' + esc(d) + '" aria-pressed="' + (i === state.slide) + '"><span></span></button>';
     }).join('');
   }
-  function go(i) { state.slide = (i + 3) % 3; renderSlide(true); }
+  function go(i) { state.slide = (i + slides.length) % slides.length; renderSlide(true); }
   document.getElementById('dots').addEventListener('click', function (e) {
     var b = e.target.closest('.dot'); if (b) go(Number(b.dataset.i));
   });

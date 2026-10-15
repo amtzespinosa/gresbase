@@ -64,6 +64,12 @@ test('finds tables in every schema and opens them', async () => {
   expect(within(dialog).getByText('events')).toBeInTheDocument()
   expect(within(dialog).queryByText('events_2025')).not.toBeInTheDocument()
 
+  // A term that matches nothing still offers the global search, without "Nothing matches.".
+  await userEvent.type(within(dialog).getByRole('combobox'), 'zzqx')
+  expect(within(dialog).getByRole('option', { name: /in all tables/ })).toBeInTheDocument()
+  expect(within(dialog).queryByText('Nothing matches.')).not.toBeInTheDocument()
+  await userEvent.clear(within(dialog).getByRole('combobox'))
+
   await userEvent.type(within(dialog).getByRole('combobox'), 'plans')
   expect(within(dialog).queryByText('users')).not.toBeInTheDocument()
   await userEvent.click(within(dialog).getByRole('option', { name: /billing\.plans/ }))

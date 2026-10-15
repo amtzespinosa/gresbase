@@ -100,6 +100,14 @@ h1 { margin: 28px 0 0; font-size: clamp(48px, 12vw, 64px); line-height: 1; font-
   transition: opacity 1.2s cubic-bezier(.4,0,.2,1), transform 1.6s cubic-bezier(.2,.7,.2,1);
 }
 .slide.on { opacity: 1; transform: none; }
+/* The search GIF follows the site theme, like the tokens (tokens.css). */
+.slide-gif img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.slide-gif .gif-dark, [data-theme="dark"] .slide-gif .gif-light { display: none; }
+[data-theme="dark"] .slide-gif .gif-dark { display: block; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .slide-gif .gif-light { display: none; }
+  :root:not([data-theme="light"]) .slide-gif .gif-dark { display: block; }
+}
 .stage { touch-action: pan-y; }
 .caption-row { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 18px; }
 .caption { margin: 0; min-height: 21px; font-size: 14px; color: var(--muted); text-align: center; text-wrap: balance; transition: opacity .35s ease; }

@@ -245,6 +245,10 @@ export async function build({ prod = false, reload = '' } = {}) {
     css: await bundle('css', 'landing', ['tokens.css', 'base.css', 'landing.css'], prod, fonts),
     js: await bundle('js', 'landing', ['landing.js'], prod),
     themeScript: prod ? minifyJs(themeScript) : themeScript,
+    searchGif: {
+      light: await copyHashed(join(siteDir, 'src', 'img', 'landing', 'search-light.gif'), 'img', prod),
+      dark: await copyHashed(join(siteDir, 'src', 'img', 'landing', 'search-dark.gif'), 'img', prod),
+    },
     reload,
   }
   for (const lang of config.langs) {

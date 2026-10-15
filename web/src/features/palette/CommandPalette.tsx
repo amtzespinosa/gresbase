@@ -147,9 +147,12 @@ function PaletteBody({ onDone }: { onDone: () => void }) {
         <Kbd>{t('palette.esc')}</Kbd>
       </div>
       <Command.List className="max-h-[min(420px,60vh)] overflow-y-auto py-1">
-        <Command.Empty className="px-4 py-6 text-center text-muted">
-          {t('palette.empty')}
-        </Command.Empty>
+        {/* With a term, "Search … in all tables" is always there: nothing to call empty. */}
+        {term.length < 2 && (
+          <Command.Empty className="px-4 py-6 text-center text-muted">
+            {t('palette.empty')}
+          </Command.Empty>
+        )}
 
         {term.length >= 2 && (
           <Command.Group className={groupClass} forceMount>

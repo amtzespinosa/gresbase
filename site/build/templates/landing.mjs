@@ -279,6 +279,7 @@ export function landingPage({ config, assets, lang }) {
             <div class="slide on" data-slide="0">${shot('tables', lang, '', 1)}</div>
             <div class="slide" data-slide="1" aria-hidden="true">${shot('sql', lang, '', 2)}</div>
             <div class="slide" data-slide="2" aria-hidden="true">${shot('tables', other, 't-dark', 3)}</div>
+            <div class="slide slide-gif" data-slide="3" data-interval="8s" aria-hidden="true"><img class="gif-light" src="/img/${assets.searchGif.light}" width="980" height="560" alt="" loading="lazy"><img class="gif-dark" src="/img/${assets.searchGif.dark}" width="980" height="560" alt="" loading="lazy"></div>
           </div>
         </div>
       </div>

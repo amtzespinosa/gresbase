@@ -65,34 +65,42 @@ enseña su SQL y se puede deshacer incluso después de guardarlo.
 
 <table>
   <tr>
+    <td width="50%"><b>Buscar en todas las tablas</b><br><b>Un valor en todas las tablas a la vez</b>, con resultados en directo, tabla a tabla, y también los nombres de tablas, vistas y columnas.</td>
     <td width="50%"><b>Tablas rápidas</b><br>Grid virtualizado, <b>paginación por clave</b>, filtros y orden por varias columnas en la URL.</td>
+  </tr>
+  <tr>
     <td width="50%"><b>Cola de cambios</b><br>Las ediciones esperan con su diff y su SQL, y se guardan en <b>una transacción</b>.</td>
+    <td width="50%"><b>Deshacer y rehacer</b><br><b>También después de guardar</b>, con operaciones inversas que comprueban conflictos.</td>
   </tr>
   <tr>
-    <td><b>Deshacer y rehacer</b><br><b>También después de guardar</b>, con operaciones inversas que comprueban conflictos.</td>
-    <td><b>Edición de estructura</b><br>Tablas, columnas, índices, restricciones y claves foráneas, con <b>el DDL exacto</b> antes.</td>
+    <td width="50%"><b>Edición de estructura</b><br>Tablas, columnas, índices, restricciones y claves foráneas, con <b>el DDL exacto</b> antes.</td>
+    <td width="50%"><b>Editor SQL</b><br><b>Autocompletado</b>, pestañas, parámetros <code>:nombre</code>, modo transacción, historial y consultas guardadas.</td>
   </tr>
   <tr>
-    <td><b>Editor SQL</b><br><b>Autocompletado</b>, pestañas, parámetros <code>:nombre</code>, modo transacción, historial y consultas guardadas.</td>
-    <td><b>Como una hoja de cálculo</b><br>Copia un rectángulo como TSV, CSV, JSON o <code>INSERT</code>; <b>pega en la cola</b>.</td>
+    <td width="50%"><b>Como una hoja de cálculo</b><br>Copia un rectángulo como TSV, CSV, JSON o <code>INSERT</code>; <b>pega en la cola</b>.</td>
+    <td width="50%"><b>Varias conexiones</b><br>Conexiones guardadas con etiqueta de color; <b>cada pestaña del navegador</b> puede usar una.</td>
   </tr>
   <tr>
-    <td><b>Varias conexiones</b><br>Conexiones guardadas con etiqueta de color; <b>cada pestaña del navegador</b> puede usar una.</td>
-    <td><b>Modo libre</b><br>Entra con <b>cualquier usuario de Postgres</b>, como en Adminer, solo en los servidores que permitas.</td>
+    <td width="50%"><b>Modo libre</b><br>Entra con <b>cualquier usuario de Postgres</b>, como en Adminer, solo en los servidores que permitas.</td>
+    <td width="50%"><b>Cero configuración</b><br>Variables de entorno o <b>un asistente</b>; ajustes en un fichero, secretos cifrados.</td>
   </tr>
   <tr>
-    <td><b>Cero configuración</b><br>Variables de entorno o <b>un asistente</b>; ajustes en un fichero, secretos cifrados.</td>
-    <td><b>Seguro por defecto</b><br><b>Solo localhost</b> sin login, modo solo lectura, timeouts, CSRF y límite de intentos.</td>
+    <td width="50%"><b>Seguro por defecto</b><br><b>Solo localhost</b> sin login, modo solo lectura, timeouts, CSRF y límite de intentos.</td>
+    <td width="50%"><b>Solo lectura y roles</b><br>Las búsquedas y pantallas respetan <b>el rol de Postgres</b>: sus privilegios y la seguridad por filas.</td>
   </tr>
   <tr>
-    <td><b>Buscar en todas las tablas</b><br>Un valor en <b>todas las tablas</b> y nombres de tablas y columnas, tabla a tabla.</td>
-    <td><b>Solo lectura y roles</b><br>Las búsquedas y pantallas respetan <b>el rol de Postgres</b>: sus privilegios y la seguridad por filas.</td>
-  </tr>
-  <tr>
-    <td><b>Importar y exportar</b><br>CSV a tablas existentes; exportaciones que <b>llegan desde el primer byte</b>.</td>
-    <td><b>Pequeño y privado</b><br>Una imagen, funciona sin internet, <b>sin telemetría</b>; en español e inglés, claro y oscuro.</td>
+    <td width="50%"><b>Importar y exportar</b><br>CSV a tablas existentes; exportaciones que <b>llegan desde el primer byte</b>.</td>
+    <td width="50%"><b>Pequeño y privado</b><br>Una imagen, funciona sin internet, <b>sin telemetría</b>; en español e inglés, claro y oscuro.</td>
   </tr>
 </table>
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/assets/search-dark.gif">
+    <img src=".github/assets/search-light.gif" width="760" alt="Búsqueda global: un término escrito en la paleta de comandos, tablas y columnas que coinciden, filas de varias tablas con el término resaltado, y una fila abierta filtrada con su columna resaltada">
+  </picture>
+  <br><sub><b>Buscar en todas las tablas:</b> escribe un término en <kbd>⌘</kbd> <kbd>K</kbd>, mira llegar los resultados y abre una fila.</sub>
+</p>
 
 <div align="right"><a href="#readme">↑ Volver arriba</a></div>
 
@@ -196,8 +204,13 @@ interfaz web junto a tu propio Postgres.
 | Las ediciones esperan a guardar | Sí, con diff y SQL | No | Sí | No | Sí |
 | Deshacer después de guardar | Sí | No | No | No | No |
 | Edición de estructura | Sí | Sí | Sí | Sí | Sí |
+| Buscar en todas las tablas | Valores y nombres, en directo, con las filas que coinciden | Valores: lista las tablas que los contienen | Nombres de objetos | Nombres de tablas | Nombres de objetos y columnas |
 | Administración del servidor (roles, copias, monitorización) | Aún no | Parcial | Sí | Funciones de la plataforma | Parcial |
 | Licencia | Apache-2.0 | Apache-2.0 o GPL-2.0 | PostgreSQL | Apache-2.0 | GPL-3.0 |
+
+En la fila de la búsqueda, Gresbase enseña las filas que coinciden según responde cada tabla, con límite de
+tiempo y de filas por tabla y solo lo que el rol puede leer (privilegios y seguridad por filas). Adminer
+encuentra las tablas que contienen un valor y abre cada una filtrada.
 
 Elige **pgAdmin** para administrar el servidor a fondo, **Adminer o DbGate** si trabajas con varios
 motores de bases de datos, y **Supabase Studio** si usas Supabase.

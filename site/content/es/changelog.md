@@ -8,7 +8,7 @@ La v0.3.0 es la primera versión pública; la v0.1.0 y la v0.2.0 nunca se public
 
 ## v0.4.0 (2026-10-14) {#v0-4-0}
 
-Buscar en todas las tablas a la vez.
+**Buscar en todas las tablas a la vez.** Escribe un término y Gresbase lo busca en todas las tablas que el rol puede leer, y en los nombres de tablas, vistas y columnas. Los resultados llegan tabla a tabla según responde cada una, y una fila abre su tabla filtrada a ella, con la columna que coincide resaltada. Consulta [Buscar en todas las tablas](./global-search.md).
 
 ### Novedades {#v0-4-0-added}
 

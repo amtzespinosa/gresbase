@@ -4,7 +4,9 @@ v0.3.0 is the first public version; v0.1.0 and v0.2.0 were never published.
 
 ## v0.4.0 (2026-10-14)
 
-Search all tables at once.
+**Search all tables at once.** Type a term and Gresbase looks for it in every table the role can read,
+and in the names of tables, views and columns. Results arrive table by table as each one answers, and a
+row opens its table filtered to it, with the matching column highlighted.
 
 ### Added
 
