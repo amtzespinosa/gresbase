@@ -6,6 +6,18 @@ description: What changed in each version of Gresbase, newest first.
 v0.3.0 is the first public version; v0.1.0 and v0.2.0 were never published.
 :::
 
+## v0.4.1 (2026-10-21) {#v0-4-1}
+
+A fix for signing in again in free mode.
+
+### Fixed {#v0-4-1-fixed}
+
+- Free mode: signing in again after the session expired opened the previous page on the ended session's connection and showed no database until signing out and in again. A link, bookmark or return page with a connection that no longer exists now opens the same screen on the session's own.
+
+### Changed {#v0-4-1-changed}
+
+- The image describes itself: its labels carry a description, the documentation link and the license, shown on its registry page and by `docker inspect`.
+
 ## v0.4.0 (2026-10-14) {#v0-4-0}
 
 **Search all tables at once.** Type a term and Gresbase looks for it in every table the role can read, and in the names of tables, views and columns. Results arrive table by table as each one answers, and a row opens its table filtered to it, with the matching column highlighted. See [Search all tables](./global-search.md).

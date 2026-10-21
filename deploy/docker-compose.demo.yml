@@ -14,7 +14,7 @@
 name: gresbase-demo
 
 x-gresbase: &gresbase
-  image: ghcr.io/amtzespinosa/gresbase:0.4.0
+  image: ghcr.io/amtzespinosa/gresbase:0.4.1
   restart: unless-stopped
   depends_on:
     db:

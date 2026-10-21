@@ -6,6 +6,18 @@ description: Qué cambió en cada versión de Gresbase, de la más reciente a la
 La v0.3.0 es la primera versión pública; la v0.1.0 y la v0.2.0 nunca se publicaron.
 :::
 
+## v0.4.1 (2026-10-21) {#v0-4-1}
+
+Un arreglo al volver a entrar en modo libre.
+
+### Arreglos {#v0-4-1-fixed}
+
+- Modo libre: al volver a entrar tras caducar la sesión se abría la página anterior sobre la conexión de la sesión terminada y no se veía la base hasta salir y entrar otra vez. Un enlace, un marcador o la página de vuelta con una conexión que ya no existe abren ahora la misma pantalla sobre la conexión de la sesión.
+
+### Cambios {#v0-4-1-changed}
+
+- La imagen se describe sola: sus etiquetas llevan una descripción, el enlace a la documentación y la licencia, que se ven en su página del registro y con `docker inspect`.
+
 ## v0.4.0 (2026-10-14) {#v0-4-0}
 
 **Buscar en todas las tablas a la vez.** Escribe un término y Gresbase lo busca en todas las tablas que el rol puede leer, y en los nombres de tablas, vistas y columnas. Los resultados llegan tabla a tabla según responde cada una, y una fila abre su tabla filtrada a ella, con la columna que coincide resaltada. Consulta [Buscar en todas las tablas](./global-search.md).

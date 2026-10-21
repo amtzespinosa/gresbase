@@ -15,6 +15,8 @@ test('save a query and open it from the command palette', async ({ page }) => {
 
   // From another screen, in a fresh tab of the app.
   await page.goto('/tables')
+  // The shortcut works once the shell is on screen.
+  await expect(page.getByRole('link', { name: 'Search all tables' })).toBeVisible()
   await page.keyboard.press('Control+k')
   const palette = page.getByRole('dialog', { name: 'Command palette' })
   await expect(palette).toBeVisible()

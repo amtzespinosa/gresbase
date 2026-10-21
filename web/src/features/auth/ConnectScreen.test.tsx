@@ -1,7 +1,8 @@
 import { screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { http, HttpResponse } from 'msw'
-import { config, server } from '@/test/msw'
+import { setConnection } from '@/lib/api/client'
+import { config, connections, server } from '@/test/msw'
 import { renderApp } from '@/test/render'
 
 const freeConfig = (over = {}) =>
@@ -199,4 +200,40 @@ test('disconnect ends the session after its confirmation', async () => {
   await userEvent.click(within(dialog).getByRole('button', { name: 'Disconnect' }))
   await waitFor(() => expect(logouts).toBe(1))
   await waitFor(() => expect(router.state.location.pathname).toBe('/login'))
+})
+
+test('signing in again after the session expired opens the page to return to on the new connection', async () => {
+  // The tab was on the expired session's connection, which the server no longer knows.
+  setConnection('sold')
+  server.use(
+    freeConfig(),
+    http.get('*/api/v1/connections', () =>
+      HttpResponse.json({ ...connections, default_id: 'snew', connections: [] }),
+    ),
+    http.get('*/api/v1/c/sold/connection', () =>
+      HttpResponse.json({ error: { code: 'not_found', message: 'x' } }, { status: 404 }),
+    ),
+    http.post('*/api/v1/auth/connect', () =>
+      HttpResponse.json({ auth_enabled: true, username: 'app@db/sales', role: 'user' }),
+    ),
+  )
+  const { router } = renderApp('/login?redirect=%2Fc%2Fsold%2Fsearch%3Fq%3Dinv')
+  await userEvent.type(await screen.findByLabelText('Host'), 'db')
+  await userEvent.type(screen.getByLabelText('Database'), 'sales')
+  await userEvent.type(screen.getByLabelText('User'), 'app')
+  await userEvent.type(screen.getByLabelText('Password'), 'pw-123')
+  await userEvent.click(screen.getByRole('button', { name: 'Connect' }))
+
+  await waitFor(() => expect(router.state.location.pathname).toBe('/c/snew/search'))
+  expect(router.state.location.search).toEqual({ q: 'inv' })
+})
+
+test('an unknown connection in the URL opens the same screen on the default one', async () => {
+  server.use(
+    http.get('*/api/v1/c/gone/connection', () =>
+      HttpResponse.json({ error: { code: 'not_found', message: 'x' } }, { status: 404 }),
+    ),
+  )
+  const { router } = renderApp('/c/gone/tables/public/users')
+  await waitFor(() => expect(router.state.location.pathname).toBe('/c/env/tables/public/users'))
 })

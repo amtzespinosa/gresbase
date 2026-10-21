@@ -9,6 +9,8 @@ for (const theme of ['light', 'dark'] as const) {
     }) => {
       // From the palette: type, then "Search … in all tables".
       await page.goto('/tables')
+      // The shortcut works once the shell is on screen.
+      await expect(page.getByRole('link', { name: 'Search all tables' })).toBeVisible()
       await page.keyboard.press('ControlOrMeta+k')
       await page.keyboard.type('user11999')
       await page.getByRole('option', { name: 'Search “user11999” in all tables' }).click()

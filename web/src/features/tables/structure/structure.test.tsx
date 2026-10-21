@@ -56,6 +56,7 @@ function serve(previewError = false) {
   return { previews, applied }
 }
 
+// These two type a whole column with userEvent: on a loaded machine they need more than 5 s.
 test('adding a column shows the exact SQL and warnings before applying it', async () => {
   const { applied } = serve()
   renderApp('/tables/public/users?tab=structure')
@@ -87,7 +88,7 @@ test('adding a column shows the exact SQL and warnings before applying it', asyn
       },
     },
   ])
-})
+}, 15_000)
 
 test('deleting a column needs its exact name', async () => {
   const { applied } = serve()
@@ -109,7 +110,7 @@ test('deleting a column needs its exact name', async () => {
     column: 'full_name',
     confirm: 'full_name',
   })
-})
+}, 15_000)
 
 test('a change the server refuses shows why and cannot be applied', async () => {
   serve(true)

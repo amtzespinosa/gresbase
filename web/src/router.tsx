@@ -11,7 +11,7 @@ import {
 import { RouteError } from '@/components/ErrorPanel'
 import { basePath } from '@/lib/basePath'
 import { ApiError, currentConnection, setConnection } from '@/lib/api/client'
-import { connectionsQuery } from '@/lib/api/connections'
+import { connectionStatusQuery, connectionsQuery } from '@/lib/api/connections'
 import { LoginScreen } from '@/features/auth/LoginScreen'
 import { AppShell } from '@/features/shell/AppShell'
 import { NoConnection } from '@/features/shell/NoConnection'
@@ -60,9 +60,22 @@ const sqlSearch = z.object({ sql: z.string().optional().catch(undefined) })
 const connRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/c/$connectionId',
-  beforeLoad: ({ params, context }) => {
+  beforeLoad: async ({ params, context, location }) => {
     const prev = currentConnection()
     if (prev === params.connectionId) return
+    // A connection that is gone (an expired free mode session, a deleted saved connection) is
+    // never opened from an old URL, a bookmark or the page to return to after signing in: the
+    // same screen opens on the session's default connection instead.
+    const usable = await usableConnection(context.queryClient, params.connectionId)
+    if (usable !== params.connectionId) {
+      if (!usable) throw redirect({ to: '/no-connection', replace: true })
+      throw redirect({
+        to: location.pathname.replace(/^\/c\/[^/]+/, `/c/${encodeURIComponent(usable)}`),
+        search: location.search,
+        hash: location.hash,
+        replace: true,
+      })
+    }
     setConnection(params.connectionId)
     if (prev !== undefined) {
       context.queryClient.removeQueries({
@@ -136,16 +149,35 @@ const settingsRoute = createRoute({
 /** The connection of the routes without one: the session's default (DATABASE_URL's, else the
  *  first saved one, or the free mode session's own). */
 async function defaultConnection(qc: QueryClient) {
-  let id: string
+  const id = (await sessionConnections(qc)).default_id
+  if (!id) throw redirect({ to: '/no-connection' })
+  return id
+}
+
+async function sessionConnections(qc: QueryClient) {
   try {
     // Always asked: a sign-in (free mode) changes the session's default.
-    id = (await qc.fetchQuery({ ...connectionsQuery, staleTime: 0 })).default_id
+    return await qc.fetchQuery({ ...connectionsQuery, staleTime: 0 })
   } catch (err) {
     if (err instanceof ApiError && err.code === 'setup_required') throw redirect({ to: '/setup' })
     // 401 already sent the app to /login (setUnauthorizedHandler).
     throw err
   }
-  if (!id) throw redirect({ to: '/no-connection' })
+}
+
+/**
+ * `id` while the session can use it, else the session's default ("" with none). The list answers
+ * for the default and, for an administrator, every connection; any other id is asked for directly,
+ * and only a 404 (no such connection) replaces it.
+ */
+async function usableConnection(qc: QueryClient, id: string) {
+  const list = await sessionConnections(qc)
+  if (id === list.default_id || list.connections.some((c) => c.id === id)) return id
+  try {
+    await qc.fetchQuery(connectionStatusQuery(id))
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 404) return list.default_id
+  }
   return id
 }
 

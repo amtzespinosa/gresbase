@@ -47,6 +47,16 @@ dockers_v2:
       org.opencontainers.image.version: "{{ .Version }}"
       org.opencontainers.image.revision: "{{ .FullCommit }}"
       org.opencontainers.image.source: "{{ .GitURL }}"
+      org.opencontainers.image.description: &description "Web manager for any PostgreSQL, as one more container next to your database. Port 8080; set DATABASE_URL or use the setup wizard."
+      org.opencontainers.image.url: &url https://gresbase.pages.dev
+      org.opencontainers.image.documentation: &docs https://gresbase.pages.dev/docs/quick-start/
+      org.opencontainers.image.licenses: Apache-2.0
+    # The GHCR package page reads the description of a multi-arch image from the index annotations.
+    annotations:
+      org.opencontainers.image.description: *description
+      org.opencontainers.image.url: *url
+      org.opencontainers.image.documentation: *docs
+      org.opencontainers.image.licenses: Apache-2.0
 
 changelog:
   use: git

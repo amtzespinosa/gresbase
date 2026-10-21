@@ -31,14 +31,16 @@ export function useConnectionEntry(id: string): ConnectionEntry | undefined {
  * Status and version of any connection, for the selector: asked only while `enabled` (opening a
  * pool per connection is not free).
  */
-export function useConnectionStatus(id: string, enabled: boolean) {
-  return useQuery({
+export const connectionStatusQuery = (id: string) =>
+  queryOptions({
     queryKey: ['connectionStatus', id],
     queryFn: () => api<ConnectionInfo>(`c/${encodeURIComponent(id)}/connection`),
-    enabled,
     staleTime: 60_000,
     retry: false,
   })
+
+export function useConnectionStatus(id: string, enabled: boolean) {
+  return useQuery({ ...connectionStatusQuery(id), enabled })
 }
 
 export type ConnectionAction =

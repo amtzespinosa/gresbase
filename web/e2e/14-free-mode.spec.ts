@@ -62,6 +62,7 @@ test('free mode: sign in with Postgres credentials, work, switch and disconnect'
   await page.getByLabel('Password').fill(decodeURIComponent(db.password))
   await page.getByRole('button', { name: 'Connect' }).click()
   await expect(page.getByRole('link', { name: /^Table users / })).toBeVisible()
+  const ended = new URL(page.url()).pathname
 
   // Disconnect ends the session on the server; the connection is remembered without password.
   await page.getByRole('button', { name: 'Session options' }).click()
@@ -78,4 +79,14 @@ test('free mode: sign in with Postgres credentials, work, switch and disconnect'
   await expect(recent).toBeVisible()
   await expect(page.getByLabel('Password')).toHaveValue('')
   await expect(page.getByLabel('Host')).toHaveValue(db.hostname)
+
+  // Signing in again with the ended session's page to return to (as after it expires): that page
+  // opens on the new session's connection, not on the gone one.
+  await page.goto(`${urls.free}/login?redirect=${encodeURIComponent(ended)}`)
+  await page.getByLabel('Password').fill(decodeURIComponent(db.password))
+  await page.getByRole('button', { name: 'Connect' }).click()
+  await expect(page.getByRole('link', { name: /^Table users / })).toBeVisible()
+  const now = new URL(page.url()).pathname
+  expect(now).toMatch(/^\/c\/s[0-9a-f]+\/tables/)
+  expect(now.split('/')[2]).not.toBe(ended.split('/')[2])
 })
